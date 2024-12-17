@@ -5,8 +5,8 @@ import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 
-router.get("/", auth(UserRole.CUSTOMER), CartItemControllers.getCartItems);
-router.get("/cart-count", auth(UserRole.CUSTOMER), CartItemControllers.getAddToCartCount);
-router.patch("/", auth(UserRole.CUSTOMER), CartItemControllers.updateCartItem);
+router.get("/", CartItemControllers.getCartItems);
+router.get("/cart-count", CartItemControllers.getAddToCartCount);
+router.patch("/", CartItemControllers.updateCartItem);
 
 export const CartItemRoutes = router;

@@ -26,7 +26,8 @@ export const Navbar = () => {
   ) as IProductProviderValues;
   const { setSearchTerm, searchTerm } = productStates;
 
-  const { data } = useGetCartCount()
+  // const { data } = useGetCartCount()
+
 
   const handleSearchKeyPress = (e: any) => {
     if (e.key === "Enter") {
@@ -68,7 +69,8 @@ export const Navbar = () => {
         <div className="w-[1280px] mx-auto px-8 flex justify-end">
           <div className="flex gap-8 text-white">
             <button>Dashboard</button>
-            <Link href="/create-product">Create Product</Link>
+            <Link href="/vendor/create-product" className="text-white">Create Product</Link>
+            <Link href="/vendor/create-shop" className="text-white">Create Shop</Link>
             <button>Become a seller</button>
             <button>Login</button>
             <button>Sign up</button>
@@ -102,11 +104,14 @@ export const Navbar = () => {
               <NavbarItem className="hidden lg:flex relative">
                 <Link href={"/cart/dsf"}>
                   <LuShoppingCart className="text-[24px] text-white cursor-pointer" />
-                  {data?.data.data && (
+                  <span className="absolute -top-2 -right-2 bg-white text-orange-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    0
+                  </span>
+                  {/* {data?.data.data && (
                     <span className="absolute -top-2 -right-2 bg-white text-orange-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                       {data?.data.data}
                     </span>
-                  )}
+                  )} */}
                 </Link>
               </NavbarItem>
             </NavbarContent>

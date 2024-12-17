@@ -14,18 +14,18 @@ router.get(
 
 router.post(
   "/",
-  auth(UserRole.ADMIN),
+  // auth(UserRole.ADMIN),
   multerUpload.single("file"),
   CategoryController.createCategory
 );
 router.patch(
   "/:categoryId",
-  auth(UserRole.ADMIN),
+  // auth(UserRole.ADMIN),
   CategoryController.editCategory
 );
 router.delete(
   "/:categoryId",
-  auth(UserRole.ADMIN),
+  // auth(UserRole.ADMIN),
   CategoryController.deleteCategory
 );
 

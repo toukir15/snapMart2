@@ -1,6 +1,6 @@
 import { createProduct } from "../services/product/mutation";
 import { getFlashSaleProducts } from "../services/product/query";
-import { getProducts } from "../services/product/serverQuery";
+import { getProducts, getVendorProducts } from "../services/product/serverQuery";
 // import { IProductsProps } from "../types/api/product";
 import {
   useMutation,
@@ -62,6 +62,19 @@ export const useGetProducts = ({
     keepPreviousData: false,
     cacheTime: 0,
     staleTime: 0,
+  });
+};
+
+export const useGetVendorProducts = () => {
+  return useQuery<any, Error>({
+    queryKey: ["VENDOR_PRODUCTS"],
+    queryFn: async () => {
+      const data = await getVendorProducts();
+      return data;
+    },
+    // onSuccess: (newData) => {
+
+    // },
   });
 };
 

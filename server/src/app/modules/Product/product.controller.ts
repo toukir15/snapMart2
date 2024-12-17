@@ -4,6 +4,9 @@ import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
 import { ProductService } from "./product.service";
 import { pick } from "../../../shared/pick";
+interface CustomRequest extends Request {
+  user?: any;
+}
 
 const getProducts = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ["searchTerm", "category", "brand", "price"]);
@@ -14,6 +17,20 @@ const getProducts = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Retrive products successfully",
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
+const getVendorProducts = catchAsync(async (req: CustomRequest, res: Response) => {
+  const filters = pick(req.query, ["searchTerm", "category", "brand", "price"]);
+  const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+  const result = await ProductService.getVendorProducts(filters, options, req.user.email);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Retrive vendor products successfully",
     meta: result.meta,
     data: result.data,
   });
@@ -106,6 +123,7 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const ProductController = {
+  getVendorProducts,
   createProduct,
   updateProduct,
   deleteProduct,

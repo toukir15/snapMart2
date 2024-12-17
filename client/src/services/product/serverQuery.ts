@@ -11,6 +11,17 @@ export const createPayment = async () => {
   }
 };
 
+export const getVendorProducts = async () => {
+  try {
+    const { data } = await axiosInstance.get(`/product/vendor`);
+    return { data };
+  } catch (error: any) {
+    throw new Error(
+      error.message || "An error occurred while fetching products."
+    );
+  }
+};
+
 export const getProducts = async ({
   brand,
   category,

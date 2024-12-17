@@ -1,22 +1,29 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
 import { IFile } from "../../interfaces/file";
+interface CustomRequest extends Request {
+  user?: any;
+}
 
 const getShop = () => {
   console.log("object");
 };
 
-const createShop = async (req: Request) => {
+const createShop = async (req: CustomRequest) => {
   const file = req.file as IFile;
 
-  const vendorId = req.body.vendorId;
+  const findVendor = await prisma.vendor.findFirst({
+    where: {
+      email: req.user.email
+    }
+  })
 
   // Start a Prisma transaction
   const result = await prisma.$transaction(async (tx) => {
     // Check if the vendor already has a shop
     const existingShop = await tx.shop.findUnique({
       where: {
-        vendorId: vendorId,
+        vendorId: findVendor?.id,
       },
     });
 
@@ -27,6 +34,7 @@ const createShop = async (req: Request) => {
     // Create the shop
     const shopData = {
       ...req.body,
+      vendorId: findVendor?.id,
       logo: file.path,
     };
 
@@ -37,7 +45,7 @@ const createShop = async (req: Request) => {
     // Update the vendor with the created shop ID
     await tx.vendor.update({
       where: {
-        id: vendorId,
+        id: findVendor?.id,
       },
       data: {
         shopId: shop.id,

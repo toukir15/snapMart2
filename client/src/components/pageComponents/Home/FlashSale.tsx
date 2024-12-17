@@ -1,12 +1,13 @@
 import React from "react";
-import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import { getFlashSaleProducts } from "@/src/services/product/query";
 import Link from "next/link";
 import { calculateDiscounnt } from "@/src/utils/calculateDiscount";
+import Image from "next/image";
 
 export default async function FlashSale() {
     const { data } = await getFlashSaleProducts();
+    console.log(data)
     return (
         <div className="mt-12">
             <h3 className="text-2xl ">Flash Sale</h3>

@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(UserRole.VENDOR, UserRole.CUSTOMER),
+  auth(UserRole.VENDOR),
   multerUpload.array("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
@@ -19,6 +19,12 @@ router.post(
 router.get(
   "/",
   ProductController.getProducts
+);
+
+router.get(
+  "/vendor",
+  auth(UserRole.VENDOR),
+  ProductController.getVendorProducts
 );
 
 router.get(
@@ -44,7 +50,7 @@ router.get(
 
 router.patch(
   "/:productId",
-  auth(UserRole.VENDOR),
+  // auth(UserRole.VENDOR),
   ProductController.updateProduct
 );
 router.delete(

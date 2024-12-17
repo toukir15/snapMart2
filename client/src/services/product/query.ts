@@ -62,7 +62,7 @@ export const getFlashSaleProducts = async () => {
     };
 
     const res = await fetch(
-      `https://snapmartserver.vercel.app/api/v1/product/flash-sale`,
+      `http://localhost:5000/api/v1/product/flash-sale`,
       fetchOption
     );
 

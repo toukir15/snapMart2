@@ -6,6 +6,7 @@ import { jwtHelpers } from "../../../helpars/jwtHelpers";
 import { Secret } from "jsonwebtoken";
 
 const loginUser = async (payload: { email: string; password: string }) => {
+  console.log("object")
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: payload.email,
