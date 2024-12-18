@@ -16,6 +16,16 @@ router.post(
   }
 );
 
+router.patch(
+  "/:productId",
+  auth(UserRole.VENDOR),
+  multerUpload.array("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    return ProductController.editProduct(req, res, next);
+  }
+);
+
 router.get(
   "/",
   ProductController.getProducts
@@ -48,11 +58,6 @@ router.get(
   ProductController.getProduct
 );
 
-router.patch(
-  "/:productId",
-  // auth(UserRole.VENDOR),
-  ProductController.updateProduct
-);
 router.delete(
   "/:productId",
   auth(UserRole.VENDOR),

@@ -97,19 +97,18 @@ const createProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateProduct = catchAsync(async (req: Request, res: Response) => {
-  const result = await ProductService.updateProduct(
-    req.params.productId,
-    req.body
-  );
+const editProduct = catchAsync(async (req: Request, res: Response) => {
+  const productId = req.params.productId
+  const result = await ProductService.editProduct(req, productId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Update product successfully",
+    message: "Edit product successfully",
     data: result,
   });
 });
+
 
 const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   const result = await ProductService.deleteProduct(req.params.productId);
@@ -125,11 +124,11 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
 export const ProductController = {
   getVendorProducts,
   createProduct,
-  updateProduct,
   deleteProduct,
   getProducts,
   getFlashSaleProducts,
   getProduct,
   getSuggestedProducts,
   getBrands,
+  editProduct
 };

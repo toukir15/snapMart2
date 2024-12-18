@@ -69,6 +69,7 @@ export const Navbar = () => {
         <div className="w-[1280px] mx-auto px-8 flex justify-end">
           <div className="flex gap-8 text-white">
             <button>Dashboard</button>
+            <Link href="/shop/dfdsf" className="text-white">Shop</Link>
             <Link href="/vendor/create-product" className="text-white">Create Product</Link>
             <Link href="/vendor/create-shop" className="text-white">Create Shop</Link>
             <button>Become a seller</button>

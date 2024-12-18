@@ -1,6 +1,6 @@
-import { createProduct } from "../services/product/mutation";
+import { createProduct, deleteProduct, editProduct } from "../services/product/mutation";
 import { getFlashSaleProducts } from "../services/product/query";
-import { getProducts, getVendorProducts } from "../services/product/serverQuery";
+import { getProduct, getProducts, getVendorProducts } from "../services/product/serverQuery";
 // import { IProductsProps } from "../types/api/product";
 import {
   useMutation,
@@ -78,11 +78,45 @@ export const useGetVendorProducts = () => {
   });
 };
 
-export const useCreateProduct = () => {
+export const useGetProduct = (id: string) => {
+  return useQuery<any, Error>({
+    queryKey: ["PRODUCT", id],
+    queryFn: async () => {
+      const data = await getProduct(id);
+      return data;
+    },
+    // onSuccess: (newData) => {
 
+    // },
+  });
+};
+
+export const useCreateProduct = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: any) => await createProduct(data),
-    onSuccess: async (data) => {
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["VENDOR_PRODUCTS"]);
+    },
+  });
+};
+
+export const useEditProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ formData, productId }: any) => await editProduct(formData, productId),
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["VENDOR_PRODUCTS"]);
+    },
+  });
+};
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => await deleteProduct(id),
+    onSuccess: async () => {
+      queryClient.invalidateQueries(["VENDOR_PRODUCTS"]);
     },
   });
 };

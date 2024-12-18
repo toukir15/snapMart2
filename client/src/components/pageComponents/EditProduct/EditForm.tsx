@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useForm, Controller, SubmitHandler, FieldValues } from "react-hook-form";
 import { Button, Select, SelectItem } from "@nextui-org/react";
-import { useCreateProduct } from "@/src/hooks/product.hook";
-import { useGetCategory } from "@/src/hooks/category.hook";
 import PageLoading from "@/src/components/loading/PageLoading";
 import { toast } from "sonner";
 import ImageUploader from "@/src/components/pageComponents/CreateProduct/ImageUploader";
@@ -11,13 +9,15 @@ import { FormInput } from "@/src/components/pageComponents/CreateProduct/Product
 import { DEPARTMENTS } from "@/src/const";
 import { Category, Department, ProductFormData } from "@/src/types/createProduct";
 import { Textarea } from "@nextui-org/input";
+import { useRouter } from "next/navigation";
+import { useEditProduct } from "@/src/hooks/product.hook";
 
-const ProductForm = () => {
-    const { mutate: handleCreateProduct, isLoading, isSuccess } = useCreateProduct();
+const EditForm = ({ productData, categoryData }: { productData: any, categoryData: any }) => {
+    const { mutate: handleEditProduct, isLoading, isSuccess, isError, error } = useEditProduct();
     const [imagePreviews, setImagePreviews] = useState<{ file: File; preview: string }[]>([]);
     const [productFiles, setProductFiles] = useState<File[]>([]);
-    const { data: categoryData } = useGetCategory();
-    const categories: Category[] = categoryData?.data?.data.map(({ id, name }: { id: string, name: string }) => ({
+    const router = useRouter()
+    const categories: Category[] = categoryData?.map(({ id, name }: { id: string, name: string }) => ({
         key: id,
         label: name,
     })) || [];
@@ -29,17 +29,14 @@ const ProductForm = () => {
         setValue,
         formState: { errors },
         reset
-    } = useForm<ProductFormData>({
-        defaultValues: {
-            flashSale: false,
-        }
-    });
+    } = useForm<FieldValues>();
 
-    const onSubmit: SubmitHandler<ProductFormData> = async (data) => {
+    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+        console.log(data)
         const formData = new FormData();
         formData.append("data", JSON.stringify(data));
         productFiles.forEach((file) => formData.append("file", file));
-        handleCreateProduct(formData);
+        handleEditProduct({ formData, productId: productData.id });
     };
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,11 +69,9 @@ const ProductForm = () => {
     };
 
     useEffect(() => {
-        if (isSuccess) {
-            toast.success("Product created successfully!");
-            reset()
-            setImagePreviews([])
-            setProductFiles([])
+        if (!isError && isSuccess) {
+            toast.success("Product edited successfully!");
+            router.push("/vendor/products")
         }
     }, [isSuccess]);
 
@@ -86,9 +81,10 @@ const ProductForm = () => {
             <div className="container mx-auto px-8 py-10 flex justify-center items-center min-h-screen">
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="w-full max-w-4xl space-y-8 bg-[#F7F7F7] shadow-md rounded-2xl p-12 border border-gray-200"
+                    className="w-full max-w-4xl bg-[#F7F7F7] shadow-md rounded-2xl p-12 border border-gray-200"
                 >
-                    <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Add New Product</h2>
+                    <h2 className="text-3xl font-bold mb-2 text-center text-gray-800">Edit Product</h2>
+                    <p className="text-center mb-12 text-rose-500">Edit existing product information.</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="col-span-full">
                             <FormInput
@@ -96,7 +92,8 @@ const ProductForm = () => {
                                 label="Product Name"
                                 register={register}
                                 error={errors.name}
-                                required
+                                defaultValue={productData?.name}
+                                required={true}
                             />
                         </div>
                         <Controller
@@ -123,13 +120,13 @@ const ProductForm = () => {
                             )}
                         />
                         <Controller
-                            name="category"
+                            name="categoryId"
                             control={control}
                             rules={{ required: "Category is required" }}
                             render={({ field }) => (
                                 <Select
                                     {...field}
-                                    items={categories || []}
+                                    items={categories}
                                     label="Category"
                                     fullWidth
                                     variant="bordered"
@@ -151,7 +148,8 @@ const ProductForm = () => {
                             type="number"
                             register={register}
                             error={errors.price}
-                            required
+                            defaultValue={productData?.price}
+                            required={true}
                         />
                         <FormInput
                             name="rating"
@@ -159,28 +157,32 @@ const ProductForm = () => {
                             type="number"
                             register={register}
                             error={errors.rating}
-                            required
+                            defaultValue={productData?.rating}
+                            required={true}
                         />
                         <FormInput
                             name="model"
                             label="Model"
                             register={register}
                             error={errors.model}
-                            required
+                            defaultValue={productData?.model}
+                            required={true}
                         />
                         <FormInput
                             name="styleCode"
                             label="Style Code"
                             register={register}
                             error={errors.styleCode}
-                            required
+                            defaultValue={productData?.styleCode}
+                            required={true}
                         />
                         <FormInput
                             name="color"
                             label="Color"
                             register={register}
                             error={errors.color}
-                            required
+                            defaultValue={productData?.color}
+                            required={true}
                         />
                         <FormInput
                             name="inventoryCount"
@@ -188,7 +190,8 @@ const ProductForm = () => {
                             type="number"
                             register={register}
                             error={errors.inventoryCount}
-                            required
+                            defaultValue={productData?.inventoryCount}
+                            required={true}
                         />
                         <div className="col-span-full">
                             <FormInput
@@ -197,16 +200,19 @@ const ProductForm = () => {
                                 type="number"
                                 register={register}
                                 error={errors.discount}
-                                required
+                                defaultValue={productData?.discount}
+                                required={true}
                             />
                         </div>
 
                         <div className="col-span-full">
                             <label className="flex items-center gap-2 w-fit">
                                 <input
-                                    {...register("flashSale")}
+                                    {...register("isFlashSale")}
                                     type="checkbox"
-                                    onChange={(e) => setValue("flashSale", e.target.checked)}
+                                    defaultChecked={productData?.isFlashSale}
+                                    onChange={(e) => setValue("isFlashSale", e.target.checked)}
+
                                 />
                                 <span className="text-gray-600 text-sm">Flash Sale</span>
                             </label>
@@ -218,8 +224,9 @@ const ProductForm = () => {
                                 label="Description"
                                 variant="bordered"
                                 fullWidth
+                                defaultValue={productData?.description}
                                 rows={4}
-                                required
+                                required={true}
                             />
                         </div>
 
@@ -228,7 +235,6 @@ const ProductForm = () => {
                             onChange={handleImageChange}
                             onRemove={removeImage}
                             multiple={true}
-                            required={true}
                         />
                         <div className="col-span-full">
                             <Button
@@ -236,7 +242,7 @@ const ProductForm = () => {
                                 size="lg"
                                 className="w-full bg-gradient-to-r from-orange-500 to-[#F85606] text-white font-semibold py-4"
                             >
-                                Create Product
+                                Edit Product
                             </Button>
                         </div>
                     </div>
@@ -246,4 +252,4 @@ const ProductForm = () => {
     );
 };
 
-export default ProductForm;
+export default EditForm;

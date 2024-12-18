@@ -33,7 +33,7 @@ export const CustomTable = ({
                         {actions.map((action, index) => (
                             <button
                                 key={index}
-                                onClick={() => action.onClick(record._id, record)}
+                                onClick={() => action.onClick(record.id, _)}
                                 className={action.className || "bg-blue-500 hover:bg-blue-600 transition duration-150 py-1 px-3 rounded text-white"}
                             >
                                 {action.label}

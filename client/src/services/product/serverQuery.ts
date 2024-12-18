@@ -22,6 +22,17 @@ export const getVendorProducts = async () => {
   }
 };
 
+export const getProduct = async (id: string) => {
+  try {
+    const { data } = await axiosInstance.get(`/product/${id}`);
+    return { data };
+  } catch (error: any) {
+    throw new Error(
+      error.message || "An error occurred while fetching products."
+    );
+  }
+};
+
 export const getProducts = async ({
   brand,
   category,

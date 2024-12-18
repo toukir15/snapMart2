@@ -2,10 +2,10 @@ import { Input } from '@nextui-org/input'
 import React from 'react'
 import { IoCloseSharp } from 'react-icons/io5'
 
-export default function ImageUploader({ imagePreviews, onChange, onRemove, multiple }: any) {
+export default function ImageUploader({ imagePreviews, onChange, onRemove, multiple, required = false }: any) {
     return (
         <div className="col-span-full">
-            <Input variant='bordered' type="file" required multiple={multiple} accept="image/*" onChange={onChange} />
+            <Input variant='bordered' type="file" required={required} multiple={multiple} accept="image/*" onChange={onChange} />
             <div className="grid grid-cols-4 gap-4 mt-4">
                 {imagePreviews.map((preview: any, index: any) => (
                     <div

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Button, Select, SelectItem } from "@nextui-org/react";
 import { useCreateProduct } from "@/src/hooks/product.hook";
-import { useGetCategory } from "@/src/hooks/category.hook";
 import PageLoading from "@/src/components/loading/PageLoading";
 import { toast } from "sonner";
 import ImageUploader from "@/src/components/pageComponents/CreateProduct/ImageUploader";
@@ -12,12 +11,11 @@ import { DEPARTMENTS } from "@/src/const";
 import { Category, Department, ProductFormData } from "@/src/types/createProduct";
 import { Textarea } from "@nextui-org/input";
 
-const ProductForm = () => {
-    const { mutate: handleCreateProduct, isLoading, isSuccess } = useCreateProduct();
+const DuplicateForm = ({ productData, categoryData }: { productData: any, categoryData: any }) => {
+    const { mutate: handleCreateProduct, isLoading, isSuccess, isError, error } = useCreateProduct();
     const [imagePreviews, setImagePreviews] = useState<{ file: File; preview: string }[]>([]);
     const [productFiles, setProductFiles] = useState<File[]>([]);
-    const { data: categoryData } = useGetCategory();
-    const categories: Category[] = categoryData?.data?.data.map(({ id, name }: { id: string, name: string }) => ({
+    const categories: Category[] = categoryData?.map(({ id, name }: { id: string, name: string }) => ({
         key: id,
         label: name,
     })) || [];
@@ -71,8 +69,10 @@ const ProductForm = () => {
         setProductFiles((prev) => prev.filter((file) => file !== fileToRemove));
     };
 
+    console.log({ isError, error })
+
     useEffect(() => {
-        if (isSuccess) {
+        if (!isError && isSuccess) {
             toast.success("Product created successfully!");
             reset()
             setImagePreviews([])
@@ -80,15 +80,23 @@ const ProductForm = () => {
         }
     }, [isSuccess]);
 
+    useEffect(() => {
+        if (isError) {
+            toast.success("Change the product name!");
+
+        }
+    }, [isError]);
+
     return (
         <>
             {isLoading && <PageLoading />}
             <div className="container mx-auto px-8 py-10 flex justify-center items-center min-h-screen">
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="w-full max-w-4xl space-y-8 bg-[#F7F7F7] shadow-md rounded-2xl p-12 border border-gray-200"
+                    className="w-full max-w-4xl bg-[#F7F7F7] shadow-md rounded-2xl p-12 border border-gray-200"
                 >
-                    <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Add New Product</h2>
+                    <h2 className="text-3xl font-bold mb-2 text-center text-gray-800">Add New Product</h2>
+                    <p className="text-center mb-12 text-rose-500">Duplicate a existing product for quicker addition.</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="col-span-full">
                             <FormInput
@@ -97,7 +105,11 @@ const ProductForm = () => {
                                 register={register}
                                 error={errors.name}
                                 required
+                                defaultValue={productData?.name}
                             />
+                            {errors.name && (
+                                <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+                            )}
                         </div>
                         <Controller
                             name="department"
@@ -129,7 +141,7 @@ const ProductForm = () => {
                             render={({ field }) => (
                                 <Select
                                     {...field}
-                                    items={categories || []}
+                                    items={categories}
                                     label="Category"
                                     fullWidth
                                     variant="bordered"
@@ -151,6 +163,7 @@ const ProductForm = () => {
                             type="number"
                             register={register}
                             error={errors.price}
+                            defaultValue={productData?.price}
                             required
                         />
                         <FormInput
@@ -159,6 +172,7 @@ const ProductForm = () => {
                             type="number"
                             register={register}
                             error={errors.rating}
+                            defaultValue={productData?.rating}
                             required
                         />
                         <FormInput
@@ -166,6 +180,7 @@ const ProductForm = () => {
                             label="Model"
                             register={register}
                             error={errors.model}
+                            defaultValue={productData?.model}
                             required
                         />
                         <FormInput
@@ -173,6 +188,7 @@ const ProductForm = () => {
                             label="Style Code"
                             register={register}
                             error={errors.styleCode}
+                            defaultValue={productData?.styleCode}
                             required
                         />
                         <FormInput
@@ -180,6 +196,7 @@ const ProductForm = () => {
                             label="Color"
                             register={register}
                             error={errors.color}
+                            defaultValue={productData?.color}
                             required
                         />
                         <FormInput
@@ -188,6 +205,7 @@ const ProductForm = () => {
                             type="number"
                             register={register}
                             error={errors.inventoryCount}
+                            defaultValue={productData?.inventoryCount}
                             required
                         />
                         <div className="col-span-full">
@@ -197,6 +215,7 @@ const ProductForm = () => {
                                 type="number"
                                 register={register}
                                 error={errors.discount}
+                                defaultValue={productData?.discount}
                                 required
                             />
                         </div>
@@ -206,6 +225,7 @@ const ProductForm = () => {
                                 <input
                                     {...register("flashSale")}
                                     type="checkbox"
+                                    defaultChecked={productData?.isFlashSale}
                                     onChange={(e) => setValue("flashSale", e.target.checked)}
                                 />
                                 <span className="text-gray-600 text-sm">Flash Sale</span>
@@ -218,6 +238,7 @@ const ProductForm = () => {
                                 label="Description"
                                 variant="bordered"
                                 fullWidth
+                                defaultValue={productData?.description}
                                 rows={4}
                                 required
                             />
@@ -246,4 +267,4 @@ const ProductForm = () => {
     );
 };
 
-export default ProductForm;
+export default DuplicateForm;

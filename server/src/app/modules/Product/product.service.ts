@@ -345,6 +345,11 @@ const createProduct = async (req: CustomRequest) => {
     },
   });
 
+  const findShop = await prisma.shop.findFirstOrThrow({
+    where: {
+      id: findVendor?.shopId
+    }
+  })
   if (!findVendor || !findVendor.shopId) {
     throw new Error("Vendor does not exist or does not have a shop.");
   }
@@ -370,7 +375,7 @@ const createProduct = async (req: CustomRequest) => {
       connect: { id: findVendor.shopId },
     },
     price: Number(req.body.price),
-    brand: req.body.brand,
+    brand: findShop.name,
     rating: Number(req.body.rating),
     model: req.body.model,
     department: req.body.department,
@@ -382,33 +387,50 @@ const createProduct = async (req: CustomRequest) => {
     description: req.body.description,
     images: productImages,
   };
-  console.log(productData)
   const result = await prisma.product.create({
     data: productData,
   });
-  console.log(result)
 
   return result;
 };
 
+const editProduct = async (req: CustomRequest, productId: string) => {
+  const files = req.files as IFile[];
+  const productImages = files.map((file) => file.path);
 
+  const productData = req.body
 
-const updateProduct = async (productId: string, data: Partial<Product>) => {
-  await prisma.product.findUniqueOrThrow({
-    where: {
-      id: productId,
-    },
-  });
+  if (productImages.length > 0) {
+    productData.images = productImages
+  }
+
+  if (productData.price.length > 0) {
+    productData.price = Number(productData.price)
+  }
+
+  if (productData.rating.length > 0) {
+    productData.rating = Number(productData.rating)
+  }
+
+  if (productData.inventoryCount.length > 0) {
+    productData.inventoryCount = Number(productData.inventoryCount)
+  }
+
+  if (productData.discount.length > 0) {
+    productData.discount = Number(productData.discount)
+  }
 
   const result = await prisma.product.update({
     where: {
-      id: productId,
+      id: productId
     },
-    data,
-  });
+    data: productData
+  })
 
-  return result;
+  return result
+
 };
+
 
 const deleteProduct = async (productId: string) => {
   await prisma.product.findUniqueOrThrow({
@@ -429,11 +451,11 @@ const deleteProduct = async (productId: string) => {
 export const ProductService = {
   getVendorProducts,
   createProduct,
-  updateProduct,
   deleteProduct,
   getProducts,
   getFlashSaleProducts,
   getProduct,
   getSuggestedProducts,
   getBrands,
+  editProduct
 };
