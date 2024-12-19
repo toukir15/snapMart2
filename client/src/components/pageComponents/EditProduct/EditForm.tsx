@@ -32,7 +32,6 @@ const EditForm = ({ productData, categoryData }: { productData: any, categoryDat
     } = useForm<FieldValues>();
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        console.log(data)
         const formData = new FormData();
         formData.append("data", JSON.stringify(data));
         productFiles.forEach((file) => formData.append("file", file));

@@ -6,14 +6,14 @@ import { jwtHelpers } from "../../../helpars/jwtHelpers";
 import { Secret } from "jsonwebtoken";
 
 const loginUser = async (payload: { email: string; password: string }) => {
-  console.log("object")
-  const userData = await prisma.user.findUniqueOrThrow({
+  const findUserData = await prisma.user.findUniqueOrThrow({
     where: {
       email: payload.email,
       status: UserStatus.ACTIVE,
     },
   });
 
+  const userData: any = { ...findUserData }
   const isCorrectPassword: boolean = await bcrypt.compare(
     payload.password,
     userData.password
@@ -21,6 +21,14 @@ const loginUser = async (payload: { email: string; password: string }) => {
 
   if (!isCorrectPassword) {
     throw new Error("Password incorrect!");
+  }
+  if (userData.role === "VENDOR") {
+    const findVendor = await prisma.vendor.findFirstOrThrow({
+      where: {
+        email: userData.email
+      }
+    })
+    userData.shopId = findVendor.shopId
   }
   const accessToken = jwtHelpers.generateToken(
     userData,

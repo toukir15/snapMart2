@@ -8,17 +8,19 @@ import ImageUploader from "@/src/components/pageComponents/CreateProduct/ImageUp
 import { FormInput } from "@/src/components/pageComponents/CreateProduct/ProductInput";
 import { Textarea } from "@nextui-org/input";
 import { useCreateShop } from "@/src/hooks/shop.hook";
+import { useRouter } from "next/navigation";
 
 const CreateShop = () => {
-  const { mutate: handleCreateShop, isLoading, isSuccess } = useCreateShop();
+  const { mutate: handleCreateShop, data: shopData, isLoading, isSuccess } = useCreateShop();
   const [imagePreviews, setImagePreviews] = useState<{ file: File; preview: string }[]>([]);
   const [shopFiles, setShopFiles] = useState<File[]>([]);
+  const router = useRouter()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset, // Import reset from useForm
+    reset,
   } = useForm<FieldValues>();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -62,11 +64,14 @@ const CreateShop = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Shop created successfully!");
-      reset(); // Reset form fields
-      setImagePreviews([]); // Clear image previews
-      setShopFiles([]); // Clear uploaded files
+      router.push("/")
+      reset();
+      setImagePreviews([]);
+      setShopFiles([]);
     }
   }, [isSuccess, reset]);
+
+
 
   return (
     <>

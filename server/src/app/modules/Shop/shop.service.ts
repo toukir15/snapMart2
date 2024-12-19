@@ -1,15 +1,24 @@
 import { Request } from "express";
 import prisma from "../../../shared/prisma";
 import { IFile } from "../../interfaces/file";
+import { jwtHelpers } from "../../../helpars/jwtHelpers";
+import { Secret } from "jsonwebtoken";
+import config from "../../../config";
 interface CustomRequest extends Request {
   user?: any;
 }
 
-const getShop = () => {
-  console.log("object");
+const getShop = async (shopId: string) => {
+  const result = await prisma.shop.findFirstOrThrow({
+    where: {
+      id: shopId
+    }
+  })
+  return result
 };
 
 const createShop = async (req: CustomRequest) => {
+  console.log(req.user)
   const file = req.file as IFile;
 
   const findVendor = await prisma.vendor.findFirst({
@@ -42,7 +51,6 @@ const createShop = async (req: CustomRequest) => {
       data: shopData,
     });
 
-    // Update the vendor with the created shop ID
     await tx.vendor.update({
       where: {
         id: findVendor?.id,
@@ -51,8 +59,27 @@ const createShop = async (req: CustomRequest) => {
         shopId: shop.id,
       },
     });
+    const user = req.user
+    const userData = {
+      id: user.id,
+      name: user.name,
+      profilePhoto: user.profilePhoto,
+      email: user.email,
+      role: user.role,
+      status: user.status,
+      shopId: shop.id
+    }
 
-    return shop;
+    const accessToken = jwtHelpers.generateToken(
+      userData,
+      config.jwt.jwt_access_secret as Secret,
+      config.jwt.jwt_access_expires_in as string
+    );
+
+    return {
+      accessToken: accessToken,
+      data: shop
+    };
   });
 
   return result;

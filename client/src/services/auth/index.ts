@@ -116,7 +116,7 @@ export const getCurrentUser = async () => {
     const accessToken = cookieStore.get("accessToken")?.value;
 
     if (!accessToken) {
-        return null; // Return null if no access token is found
+        return null;
     }
 
     // Decode the token (synchronously)
@@ -129,8 +129,8 @@ export const getCurrentUser = async () => {
         role: decodedToken?.role,
         email: decodedToken?.email,
         profilePhoto: decodedToken?.profilePhoto,
+        shopId: decodedToken.shopId
     };
-
     return decodedUser;
 };
 // export const logout = () => {

@@ -39,6 +39,13 @@ const getProducts = async (params: any, options: any) => {
     }
   }
 
+  // Filter by price range
+  if (params.shopId) {
+    andCondition.push({
+      shopId: params.shopId,
+    });
+  }
+
   // Filter by category
   if (params.category) {
     andCondition.push({

@@ -1,7 +1,7 @@
 import "@/src/styles/globals.css";
 // import "@smastrom/react-rating/style.css";
 import Footer from "@/src/components/Footer";
-import { Navbar } from "@/src/components/navbar";
+import { Navbar } from "@/src/components/shared/navbar";
 import { useGetCartCount } from "@/src/hooks/cartItem.hook";
 
 export default function Layout({ children }: { children: React.ReactNode }) {

@@ -15,6 +15,18 @@ const createShop = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getShop = catchAsync(async (req: Request, res: Response) => {
+  const shopId = req.params.shopId
+  const result = await ShopServices.getShop(shopId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Retrive shop successfully",
+    data: result,
+  });
+});
+
 const blackListShop = catchAsync(async (req: Request, res: Response) => {
   const shopId = req.params.shopId;
   const result = await ShopServices.blackListShop(shopId);
@@ -30,4 +42,5 @@ const blackListShop = catchAsync(async (req: Request, res: Response) => {
 export const ShopController = {
   createShop,
   blackListShop,
+  getShop
 };

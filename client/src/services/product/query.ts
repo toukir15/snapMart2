@@ -1,20 +1,14 @@
-import { revalidateTag } from "next/cache";
 
-
-export const getProducts = async () => {
+export const getProducts = async (shopId: string) => {
   try {
     const fetchOption = {
       next: {
         tags: ["products"],
       },
-      headers: {
-        Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluMUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MzM2NTU1OTAsImV4cCI6MTczNDI2MDM5MH0.2wQUBf8jALe7IlaAGCYUCh_iRA3jWHJqPdBD0a5Ab5w`, // Replace YOUR_ACCESS_TOKEN with the actual token
-        "Content-Type": "application/json",
-      },
     };
 
     const res = await fetch(
-      `http://localhost:5000/api/v1/product`,
+      `http://localhost:5000/api/v1/product?shopId=${shopId}`,
       fetchOption
     );
 

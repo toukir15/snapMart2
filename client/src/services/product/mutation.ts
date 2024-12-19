@@ -1,9 +1,11 @@
 "use server";
 import axiosInstance from "@/src/lib/axiosInstance";
+import { revalidateTag } from "next/cache";
 
 export const createProduct = async (productData: any) => {
     try {
         const { data } = await axiosInstance.post(`/product`, productData);
+        revalidateTag("products")
         return { data };
     } catch (error: any) {
         throw new Error(error);

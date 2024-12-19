@@ -6,6 +6,7 @@ import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 
+router.get("/:shopId", ShopController.getShop);
 router.get("/", auth(UserRole.CUSTOMER), ShopController.blackListShop);
 router.post(
   "/",
