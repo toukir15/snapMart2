@@ -77,7 +77,7 @@ const EditForm = ({ productData, categoryData }: { productData: any, categoryDat
     return (
         <>
             {isLoading && <PageLoading />}
-            <div className="container mx-auto px-8 py-10 flex justify-center items-center min-h-screen">
+            <div className="container mx-auto px-8 py-28 mt-[120px] flex justify-center items-center min-h-screen">
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="w-full max-w-4xl bg-[#F7F7F7] shadow-md rounded-2xl p-12 border border-gray-200"

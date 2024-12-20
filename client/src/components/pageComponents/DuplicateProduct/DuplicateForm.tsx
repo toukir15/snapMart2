@@ -88,10 +88,10 @@ const DuplicateForm = ({ productData, categoryData }: { productData: any, catego
     return (
         <>
             {isLoading && <PageLoading />}
-            <div className="container mx-auto px-8 py-10 flex justify-center items-center min-h-screen">
+            <div className="container mx-auto px-8 py-28 mt-[120px] flex justify-center items-center min-h-screen">
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    className="w-full max-w-4xl bg-[#F7F7F7] shadow-md rounded-2xl p-12 border border-gray-200"
+                    className="w-full max-w-3xl bg-[#F7F7F7] shadow-md rounded-2xl p-12 border border-gray-200"
                 >
                     <h2 className="text-3xl font-bold mb-2 text-center text-gray-800">Add New Product</h2>
                     <p className="text-center mb-12 text-rose-500">Duplicate a existing product for quicker addition.</p>

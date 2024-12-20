@@ -62,8 +62,7 @@ const ShopPage = async ({ params }: any) => {
           {productsData.map((product: IProduct, index: number) => (
             <div
               key={index}
-              className={`bg-white border w-[205px] border-gray-200 p-4 shadow-sm hover:shadow-lg transition duration-300 ${(index + 1) % 6 === 0 ? "border-r" : "border-r-0"
-                }`}
+              className={`bg-white border w-[205px] border-gray-200 p-4 shadow-sm hover:shadow-lg transition duration-300`}
             >
               <div className="relative flex justify-center items-center h-[180px] bg-gray-100 rounded-lg overflow-hidden">
                 <Image
@@ -77,9 +76,9 @@ const ShopPage = async ({ params }: any) => {
               <div className="mt-4">
                 <p className="text-sm font-semibold text-gray-800">{product.name}</p>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-lg font-bold text-[#F85606]">{product.price}</span>
+                  <span className="text-lg font-bold text-[#F85606]">৳{product.price}</span>
                   <span className="text-xs font-medium text-gray-500 line-through">
-                    {product.discount}
+                    {product.discount}%
                   </span>
                 </div>
                 <div className="flex items-center gap-1 mt-3">
@@ -100,8 +99,10 @@ const ShopPage = async ({ params }: any) => {
           </Button>}
         </div>
       </div>
-      <h1 className="text-center text-2xl text-gray-500">You do not added any product yet!</h1>
-      <h1 className="text-center mt-2 text-gray-500">Click here to <Link className="underline hover:text-[#ff8548e7] text-[#F85606]" href={"/vendor/create-product"}>create product</Link></h1>
+      {!(productsData.length > 0) && <div>
+        <h1 className="text-center text-2xl text-gray-500">You do not added any product yet!</h1>
+        <h1 className="text-center mt-2 text-gray-500">Click here to <Link className="underline hover:text-[#ff8548e7] text-[#F85606]" href={"/vendor/create-product"}>create product</Link></h1>
+      </div>}
     </div>
   );
 };

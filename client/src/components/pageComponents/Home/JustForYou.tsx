@@ -7,7 +7,7 @@ import { useGetProducts } from "@/src/hooks/product.hook";
 import { getProducts } from "@/src/services/product/query";
 
 export default async function JustForYou() {
-    const { data } = await getProducts();
+    // const { data } = await getProducts();
     return (
         <div className="my-12">
             <h3 className="text-2xl ">Just For You</h3>

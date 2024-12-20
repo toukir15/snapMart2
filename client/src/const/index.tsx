@@ -10,29 +10,23 @@ export const DEPARTMENTS = [
 ];
 
 export const VendorSidebarRoutes = [
-  {
-    label: "Shop",
-    key: "1",
-    icon: <BsShop size={18} />,
-    link: "/vendor/shop",
-  },
-  {
-    label: "Create Shop",
-    key: "5",
-    icon: <IoCreateOutline size={20} />,
-    link: "/vendor/create-shop",
-  },
-  {
-    label: "Create Product",
-    key: "3",
-    icon: <IoCreateOutline size={20} />,
-    link: "/vendor/create-product",
-  },
+  // {
+  //   label: "Shop",
+  //   key: "1",
+  //   icon: <BsShop size={18} />,
+  //   link: "/vendor/shop",
+  // },
+  // {
+  //   label: "Create Product",
+  //   key: "3",
+  //   icon: <IoCreateOutline size={20} />,
+  //   link: "/dashboard/vendor/create-product",
+  // },
   {
     label: "Products",
     key: "4",
     icon: <AiOutlineProduct size={20} />,
-    link: "/vendor/products",
+    link: "/dashboard/vendor/products",
   },
   {
     label: "Reviews",
