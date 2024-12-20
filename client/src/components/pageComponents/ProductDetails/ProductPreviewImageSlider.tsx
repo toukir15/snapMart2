@@ -31,9 +31,9 @@ export default function ProductPreviewImageSlider({
   }, [selectedProductPreview, images, setSelectedProductPreview]);
 
   return (
-    <div className="mt-2">
+    <div className="mt-3">
       <Swiper
-        slidesPerView={3}
+        slidesPerView={4}
         spaceBetween={20}
         pagination={{
           clickable: true,
@@ -45,14 +45,14 @@ export default function ProductPreviewImageSlider({
           <SwiperSlide key={index}>
             <div
               onClick={() => setSelectedProductPreview(image)}
-              className={`cursor-pointer border ${selectedProductPreview == image
+              className={`cursor-pointer border-2 ${selectedProductPreview == image
                 ? "border-orange-500"
                 : "border-gray-500"
-                }`}
+                } p-1 rounded-md bg-[#F3F4F6]`}
             >
               <div className="w-full h-[70px] relative">
                 <Image
-                  src={image}
+                  src={image || ""}
                   alt={`Product preview ${index + 1}`}
                   layout="fill"
                   objectFit="cover"

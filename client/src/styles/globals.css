@@ -25,3 +25,6 @@
 .ant-spin-dot-item {
   background-color: #F85807 !important; /* Tailwind's green-500 */
 }
+.swiper-pagination{
+  display: none;
+}

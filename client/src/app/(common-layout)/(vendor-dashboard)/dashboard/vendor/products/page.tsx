@@ -9,7 +9,6 @@ import React from "react";
 
 export default function Page() {
   const { data: productsData, isLoading: isProductDataLoading } = useGetVendorProducts();
-  const { mutate: handleDeleteProduct, } = useDeleteProduct()
   const router = useRouter()
 
   // Action handlers
@@ -21,6 +20,7 @@ export default function Page() {
     router.push(`/vendor/duplicate-product/${id}`)
   };
 
+  const { mutate: handleDeleteProduct, } = useDeleteProduct()
   const handleDelete = (id: string) => {
     showConfirmation(
       "Delete",

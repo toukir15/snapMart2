@@ -18,7 +18,7 @@ export default function ProductPreviewImage({
   const { selectedProductPreview } = productStates;
 
   return (
-    <div className="w-[530px] h-[530px] flex justify-center items-center overflow-hidden border border-gray-300 bg-gray-100 rounded-sm">
+    <div className="w-[630px] h-[460px] flex justify-center items-center overflow-hidden  bg-gray-100 rounded-xl px-4 shadow">
       <InnerImageZoom
         className="max-w-full max-h-full object-contain"
         src={selectedProductPreview ? selectedProductPreview : initialPreview}

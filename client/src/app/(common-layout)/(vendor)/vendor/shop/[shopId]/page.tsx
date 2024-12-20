@@ -60,28 +60,30 @@ const ShopPage = async ({ params }: any) => {
       <div>
         <div className="flex flex-wrap mb-10">
           {productsData.map((product: IProduct, index: number) => (
-            <div
-              key={index}
+            <Link
+              key={product.id}
+              href={`/product-details/${product.id}`}
               className={`bg-white border w-[205px] border-gray-200 p-4 shadow-sm hover:shadow-lg transition duration-300`}
             >
-              <div className="relative flex justify-center items-center h-[180px] bg-gray-100 rounded-lg overflow-hidden">
+              <div className="  md:h-[200px] w-[200px] relative flex items-center">
                 <Image
                   src={product.images[0]}
-                  alt={product.name}
-                  layout="fill"
+                  alt="banner 1"
+                  width={180}
+                  height={180}
                   objectFit="cover"
                   priority
                 />
               </div>
-              <div className="mt-4">
+              <div className="mt-2">
                 <p className="text-sm font-semibold text-gray-800">{product.name}</p>
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center gap-2 mt-1">
                   <span className="text-lg font-bold text-[#F85606]">৳{product.price}</span>
                   <span className="text-xs font-medium text-gray-500 line-through">
                     {product.discount}%
                   </span>
                 </div>
-                <div className="flex items-center gap-1 mt-3">
+                <div className="flex items-center gap-1 mt-0">
                   <Rating
                     style={{ maxWidth: 80 }}
                     value={product.rating}
@@ -90,7 +92,7 @@ const ShopPage = async ({ params }: any) => {
                   <span className="text-xs text-gray-500">({product.rating})</span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         <div className="flex justify-center mb-16">

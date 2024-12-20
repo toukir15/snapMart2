@@ -9,8 +9,11 @@ import ProductDetails from "@/src/components/pageComponents/ProductDetails/Produ
 import AdditionalInformation from "@/src/components/pageComponents/ProductDetails/AdditionalInformation";
 import ProductCounter from "@/src/components/pageComponents/ProductDetails/ProductCounter";
 import ProductSuggestion from "@/src/components/pageComponents/ProductDetails/ProductSuggestion";
-import ProductSize from "@/src/components/pageComponents/ProductDetails/ProductSize";
-
+import { getCurrentUser } from "@/src/services/auth";
+import { Button } from "@nextui-org/button";
+import Link from "next/link";
+import VendorButtons from "@/src/components/pageComponents/ProductDetails/VendorButtons";
+import AdminButton from "@/src/components/pageComponents/ProductDetails/AdminButton";
 
 type ProductDetailsPageProps = {
   params: { productId: string };
@@ -23,13 +26,15 @@ export default async function ProductDetailsPage({
     // Fetch the product data
     const { data: productData } = await getProduct(params?.productId);
     const { data: productSuggestedData } = await getSuggestedProduct(productData?.id);
+    const currentUser = await getCurrentUser()
+    console.log(productData)
 
     return (
       <div className="mt-[200px] min-h-screen">
         <div className="flex gap-12">
           {/* Product view images */}
           <div>
-            <div className="h-[530px] w-[530px]">
+            <div className="h-[530px] w-[600px]">
               <ProductPreviewImage initialPreview={productData.images[0]} />
               <ProductPreviewImageSlider images={productData.images} />
             </div>
@@ -55,23 +60,26 @@ export default async function ProductDetailsPage({
             {/* Additional Information */}
             <AdditionalInformation data={productData} />
 
-            {/* Shoe Size Selection */}
-            <ProductSize />
+            {/*customer add to cart button */}
+            {currentUser?.role === "CUSTOMER" && <ProductCounter data={productData} />}
 
-            {/* Add to cart counter */}
-            <ProductCounter data={productData} />
+            {/* vendor buttons  */}
+            {currentUser?.role === "VENDOR" && productData.shopId == currentUser.shopId && <VendorButtons productData={productData} />}
+
+            {currentUser?.role === "VENDOR" && <AdminButton productData={productData} />}
+
           </div>
-        </div>
+        </div >
 
         {/* Description */}
         <div>
-          <h3 className="mt-20 text-2xl font-medium">Description</h3>
+          <h3 className="mt-0 text-2xl font-medium">Description</h3>
           <p className="mt-4">{productData.description}</p>
-        </div>
+        </div >
 
         {/* Product Suggestions */}
-        <ProductSuggestion productSuggestedData={productSuggestedData} />
-      </div>
+        {productSuggestedData.length > 0 && < ProductSuggestion productSuggestedData={productSuggestedData} />}
+      </div >
     );
   } catch (error) {
     console.error("Error fetching product details:", error);

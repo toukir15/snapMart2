@@ -70,7 +70,7 @@ const EditForm = ({ productData, categoryData }: { productData: any, categoryDat
     useEffect(() => {
         if (!isError && isSuccess) {
             toast.success("Product edited successfully!");
-            router.push("/vendor/products")
+            router.push(`/vendor/shop/${productData.shopId}`)
         }
     }, [isSuccess]);
 

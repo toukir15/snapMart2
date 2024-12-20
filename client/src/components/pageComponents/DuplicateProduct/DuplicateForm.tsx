@@ -10,9 +10,11 @@ import { FormInput } from "@/src/components/pageComponents/CreateProduct/Product
 import { DEPARTMENTS } from "@/src/const";
 import { Category, Department, ProductFormData } from "@/src/types/createProduct";
 import { Textarea } from "@nextui-org/input";
+import { useRouter } from "next/navigation";
 
 const DuplicateForm = ({ productData, categoryData }: { productData: any, categoryData: any }) => {
-    const { mutate: handleCreateProduct, isLoading, isSuccess, isError, error } = useCreateProduct();
+    const { mutate: handleCreateProduct, isLoading, isSuccess, isError } = useCreateProduct();
+    const router = useRouter()
     const [imagePreviews, setImagePreviews] = useState<{ file: File; preview: string }[]>([]);
     const [productFiles, setProductFiles] = useState<File[]>([]);
     const categories: Category[] = categoryData?.map(({ id, name }: { id: string, name: string }) => ({
@@ -72,6 +74,7 @@ const DuplicateForm = ({ productData, categoryData }: { productData: any, catego
     useEffect(() => {
         if (!isError && isSuccess) {
             toast.success("Product created successfully!");
+            router.push(`/vendor/shop/${productData.shopId}`)
             reset()
             setImagePreviews([])
             setProductFiles([])
@@ -81,7 +84,6 @@ const DuplicateForm = ({ productData, categoryData }: { productData: any, catego
     useEffect(() => {
         if (isError) {
             toast.success("Change the product name!");
-
         }
     }, [isError]);
 
