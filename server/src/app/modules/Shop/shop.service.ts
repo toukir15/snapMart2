@@ -85,6 +85,30 @@ const createShop = async (req: CustomRequest) => {
   return result;
 };
 
+const editShop = async (req: CustomRequest) => {
+  const file = req.file as IFile;
+  await prisma.vendor.findFirstOrThrow({
+    where: {
+      email: req.user.email
+    }
+  })
+  const editShopData = {
+    ...req.body
+  }
+
+  if (file?.path) {
+    editShopData.logo = file.path
+  }
+
+  const result = await prisma.shop.update({
+    where: {
+      id: req.params.shopId
+    },
+    data: editShopData
+  })
+  return result
+};
+
 const blackListShop = async (shopId: string) => {
   const shop = await prisma.shop.findUniqueOrThrow({
     where: {
@@ -107,4 +131,5 @@ export const ShopServices = {
   createShop,
   blackListShop,
   getShop,
+  editShop
 };

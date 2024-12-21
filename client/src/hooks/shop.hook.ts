@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createShop } from "../services/shop/mutation";
+import { createShop, editShop } from "../services/shop/mutation";
 
 export const useCreateShop = () => {
     // const queryClient = useQueryClient();
@@ -12,6 +12,13 @@ export const useCreateShop = () => {
         //     queryClient.invalidateQueries(["CART_COUNT"]);
 
         // },
+    });
+};
+export const useEditShop = () => {
+    return useMutation({
+        mutationKey: ["EDIT_SHOP"],
+        mutationFn: ({ formData, shopId }: any) =>
+            editShop(formData, shopId),
     });
 };
 

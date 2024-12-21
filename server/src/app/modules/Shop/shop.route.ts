@@ -17,6 +17,17 @@ router.post(
     return ShopController.createShop(req, res, next);
   }
 );
+
+router.patch(
+  "/:shopId",
+  auth(UserRole.VENDOR),
+  multerUpload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    return ShopController.editShop(req, res, next);
+  }
+);
+
 router.patch(
   "/black-list/:shopId",
   auth(UserRole.ADMIN),

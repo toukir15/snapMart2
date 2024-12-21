@@ -8,8 +8,8 @@ import { IProduct } from "@/src/types/product";
 import { getShop } from "@/src/services/shop/query";
 import Link from "next/link";
 
-const ShopPage = async ({ params }: any) => {
-  const { shopId } = await params
+const ShopPage = async ({ params }: IShopParams) => {
+  const { shopId } = params
   const { data: shopData } = await getShop(shopId)
   const { data: productsData } = await getProducts(shopId)
 

@@ -14,3 +14,12 @@ export const createShop = async (shopData: any) => {
         throw new Error(error);
     }
 };
+
+export const editShop = async (shopData: any, shopId: string) => {
+    try {
+        const { data } = await axiosInstance.patch(`/shop/${shopId}`, shopData);
+        return { data: data.data };
+    } catch (error: any) {
+        throw new Error(error);
+    }
+};
