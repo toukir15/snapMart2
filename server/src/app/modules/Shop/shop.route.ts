@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get("/", auth(UserRole.ADMIN), ShopController.getShops);
 router.get("/:shopId", ShopController.getShop);
-router.get("/blackList", auth(UserRole.CUSTOMER), ShopController.blackListShop);
+// router.get("/blackList", auth(UserRole.CUSTOMER), ShopController.blackListShop);
 router.post(
   "/",
   auth(UserRole.VENDOR),
@@ -30,9 +30,9 @@ router.patch(
 );
 
 router.patch(
-  "/black-list/:shopId",
+  "/change-status/:shopId",
   auth(UserRole.ADMIN),
-  ShopController.blackListShop
+  ShopController.updateShopStatus
 );
 
 export const ShopRoutes = router;

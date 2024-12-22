@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createShop, editShop } from "../services/shop/mutation";
+import { createShop, editShop, updateStatus } from "../services/shop/mutation";
 import { getShops } from "../services/shop/serverQuery";
 
 export const useCreateShop = () => {
@@ -15,6 +15,16 @@ export const useCreateShop = () => {
         // },
     });
 };
+export const useUpdateStatus = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ id, status }: any) => updateStatus(id, status),
+        onSuccess: async () => {
+            queryClient.invalidateQueries(["SHOPS"]);
+        },
+    });
+};
+
 export const useEditShop = () => {
     return useMutation({
         mutationKey: ["EDIT_SHOP"],

@@ -9,14 +9,20 @@ interface CustomRequest extends Request {
 }
 
 const getShops = async () => {
-  const result = await prisma.shop.findMany({
+  const shops = await prisma.shop.findMany({
     include: {
       vendor: {
-        select: { name: true },
+        select: { name: true, email: true },
       },
     },
   })
-  return result
+  // Custom sort logic for status
+  const sortedShops = shops.sort((a, b) => {
+    const statusOrder = [true, false];
+    return statusOrder.indexOf(a.isActive) - statusOrder.indexOf(b.isActive);
+  });
+
+  return sortedShops;
 };
 
 const getShop = async (shopId: string) => {
@@ -119,27 +125,29 @@ const editShop = async (req: CustomRequest) => {
   return result
 };
 
-const blackListShop = async (shopId: string) => {
-  const shop = await prisma.shop.findUniqueOrThrow({
+const updateShopStatus = async (shopId: string, newStatus: boolean) => {
+  await prisma.shop.findFirstOrThrow({
     where: {
       id: shopId,
     },
   });
-
+  // If user exists, proceed to update
   const result = await prisma.shop.update({
     where: {
       id: shopId,
     },
     data: {
-      isActive: !shop.isActive,
+      isActive: newStatus,
     },
   });
+  console.log(result)
+
   return result;
 };
 
 export const ShopServices = {
   createShop,
-  blackListShop,
+  updateShopStatus,
   getShop,
   editShop,
   getShops

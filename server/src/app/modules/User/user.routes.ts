@@ -41,7 +41,7 @@ router.post(
 
 router.patch(
   "/change-status/:userId",
-  // auth(UserRole.ADMIN),
+  auth(UserRole.ADMIN),
   userController.updateStatus
 );
 

@@ -23,3 +23,12 @@ export const editShop = async (shopData: any, shopId: string) => {
         throw new Error(error);
     }
 };
+
+export const updateStatus = async (shopId: any, status: string) => {
+    try {
+        const { data } = await axiosInstance.patch(`/shop/change-status/${shopId}`, { isActive: status });
+        return { data: data.data };
+    } catch (error: any) {
+        throw new Error(error);
+    }
+};

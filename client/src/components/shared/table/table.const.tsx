@@ -57,9 +57,14 @@ export const shopsColumns = [
         key: "name",
     },
     {
-        title: "Role",
-        dataIndex: "role",
-        key: "role",
+        title: "Vendor Name",
+        dataIndex: ["vendor", "name"],
+        key: "name",
+    },
+    {
+        title: "Vendor Email",
+        dataIndex: ["vendor", "email"],
+        key: "name",
     },
     {
         title: "Status",

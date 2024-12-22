@@ -1,9 +1,8 @@
 "use client";
 
 import { CustomTable } from "@/src/components/shared/table/table";
-import { shopsColumns, usersColumns } from "@/src/components/shared/table/table.const";
-import { useGetShops } from "@/src/hooks/shop.hook";
-import { useGetUsers, useUpdateStatus } from "@/src/hooks/user.hook";
+import { shopsColumns } from "@/src/components/shared/table/table.const";
+import { useGetShops, useUpdateStatus } from "@/src/hooks/shop.hook";
 import { showConfirmation } from "@/src/utils/showConfirmation";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
@@ -12,56 +11,46 @@ export default function UserManagementPage() {
     const { data: usersData, isLoading: isUserDataLoading } = useGetShops();
     const { mutate: handleUpdateStatus, isSuccess: isSuccessUpdateUser, data: updateStatusData } = useUpdateStatus();
 
-    const handleDelete = (id: string) => {
+    const handleBlock = (id: string) => {
         showConfirmation(
-            "Delete",
-            "Are you sure you want to delete this user?",
-            () => handleUpdateStatus({ id, status: "DELETED" })
-        );
-    };
-
-    const handleSuspend = (id: string) => {
-        showConfirmation(
-            "Suspend",
-            "Are you sure you want to suspend this user?",
-            () => handleUpdateStatus({ id, status: "BLOCKED" })
+            "Block Shop",
+            "Are you sure you want to block this shop?",
+            () => handleUpdateStatus({ id, status: false })
         );
     };
 
     const handleActivate = (id: string) => {
         showConfirmation(
-            "Activate",
-            "Are you sure you want to activate this user?",
-            () => handleUpdateStatus({ id, status: "ACTIVE" })
+            "Activate Shop",
+            "Are you sure you want to activate this shop?",
+            () => handleUpdateStatus({ id, status: true })
         );
     };
 
     const actions = [
         {
             label: "Block",
-            onClick: handleSuspend,
+            onClick: handleBlock,
             className:
                 "bg-red-500 hover:bg-red-600 transition duration-150 py-1 px-3 rounded text-white",
-            disabled: (record: any) => record.status === "BLOCKED" || record.status === "DELETED",
+            disabled: (record: any) => record.isActive === false,
         },
         {
             label: "Activate",
             onClick: handleActivate,
             className:
                 "bg-green-500 hover:bg-green-600 transition duration-150 py-1 px-3 rounded text-white",
-            disabled: (record: any) => record.status === "ACTIVE" || record.status === "DELETED",
+            disabled: (record: any) => record.isActive === true,
         },
     ];
 
     useEffect(() => {
         if (isSuccessUpdateUser) {
-            const { status } = updateStatusData?.data?.data || {};
-            if (status === "DELETED") {
-                toast.success("Successfully deleted user!", { duration: 2000 });
-            } else if (status === "BLOCKED") {
-                toast.success("Successfully suspended user!");
-            } else if (status === "ACTIVE") {
-                toast.success("Successfully activated user!");
+            const { isActive } = updateStatusData?.data || {};
+            if (isActive) {
+                toast.success("Successfully activated shop!", { duration: 2000 });
+            } else if (!isActive) {
+                toast.success("Successfully block shop!", { duration: 2000 });
             }
         }
     }, [isSuccessUpdateUser, updateStatusData]);
