@@ -1,5 +1,6 @@
 "use client";
 
+import ProductPageLoading from "@/src/components/loading/ProductPageLoading";
 import {
   IProductProviderValues,
   ProductContext,
@@ -43,10 +44,9 @@ export default function Page() {
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
-        {/* Products Grid */}
-        <div className="flex flex-wrap mt-4 ml-4">
-          {productsData?.map((product: IProduct) => {
+      <div className="flex flex-wrap mt-4 ml-4">
+        {productsData ? (
+          productsData.map((product: IProduct) => {
             const { id, name, price, discount, images } = product;
             const discountPrice = calculateDiscounnt(price, discount);
 
@@ -78,22 +78,24 @@ export default function Page() {
                 </div>
               </Link>
             );
-          })}
-        </div>
-
-        {/* Load More Button */}
-        {productsData?.length > 11 && (
-          <div className="flex justify-center items-center mt-8 pb-20">
-            <Button
-              onClick={() => setProductPage(productPage + 1)}
-              radius="none"
-              className="px-20 bg-[#F85606] text-white"
-            >
-              Load More
-            </Button>
-          </div>
+          })
+        ) : (
+          <ProductPageLoading />
         )}
-      </Suspense>
+      </div>
+
+      {/* Load More Button */}
+      {productsData?.length > 11 && (
+        <div className="flex justify-center items-center mt-8 pb-20">
+          <Button
+            onClick={() => setProductPage(productPage + 1)}
+            radius="none"
+            className="px-20 bg-[#F85606] text-white"
+          >
+            Load More
+          </Button>
+        </div>
+      )}
     </>
   );
 }

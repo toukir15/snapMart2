@@ -29,7 +29,10 @@ const ShopPage = async ({ params }: IShopParams) => {
             </div>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">{shopData.name}</h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold text-gray-800">{shopData.name}</h1>
+              <Link href={`/vendor/edit-shop/${shopData.id}`} className="underline text-red-500 hover:text-red-700 transition duration-200" >Edit Shop</Link>
+            </div>
             <p className="text-base text-gray-600 mt-1">
               {shopData.description}
             </p>
@@ -43,12 +46,12 @@ const ShopPage = async ({ params }: IShopParams) => {
           {/* Shop Actions */}
           <div className="mt-6 flex justify-center gap-3">
             <Button
-              className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-medium shadow-md transition"
+              className="bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-medium shadow-md transition"
             >
-              <Link href={`/vendor/edit-shop/${shopData.id}`} >Edit Shop</Link>
+              <Link href={`/vendor/create-product`} >Create Product</Link>
             </Button>
             <Button
-              className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-3 rounded-lg font-medium shadow-md transition"
+              className="bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-lg font-medium shadow-md transition"
             >
               Reviews
             </Button>

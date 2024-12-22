@@ -6,6 +6,11 @@ import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 
+router.get(
+  "/",
+  ProductController.getProducts
+);
+
 router.post(
   "/",
   auth(UserRole.VENDOR),
@@ -26,10 +31,7 @@ router.patch(
   }
 );
 
-router.get(
-  "/",
-  ProductController.getProducts
-);
+
 
 router.get(
   "/vendor",
@@ -60,7 +62,7 @@ router.get(
 
 router.delete(
   "/:productId",
-  auth(UserRole.VENDOR),
+  auth(UserRole.VENDOR, UserRole.ADMIN),
   ProductController.deleteProduct
 );
 

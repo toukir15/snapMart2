@@ -5,15 +5,24 @@ import { Request } from "express";
 import prisma from "../../../shared/prisma";
 
 const getUsers = async () => {
-  const result = await prisma.user.findMany({
+  // Fetch users excluding ADMIN
+  const users = await prisma.user.findMany({
     where: {
       role: {
         not: "ADMIN",
       },
     },
   });
-  return result;
+
+  // Custom sort logic for status
+  const sortedUsers = users.sort((a, b) => {
+    const statusOrder = ["ACTIVE", "BLOCKED", "DELETED"];
+    return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+  });
+
+  return sortedUsers;
 };
+
 
 const createAdmin = async (req: Request): Promise<Admin> => {
   const file = req.file as IFile;
@@ -132,211 +141,10 @@ const updateStatus = async (id: string, newStatus: UserStatus) => {
   return result;
 };
 
-const deleteUsers = async () => {
-  // Delete records in dependent tables
-  await prisma.customer.deleteMany();
-  await prisma.vendor.deleteMany();
-  await prisma.admin.deleteMany();
-
-  // Now delete users
-  const result = await prisma.user.deleteMany();
-  return result;
-};
-
-// const getAllFromDB = async (params: any, options: IPaginationOptions) => {
-//   const { page, limit, skip } = paginationHelper.calculatePagination(options);
-//   const { searchTerm, ...filterData } = params;
-
-//   const andCondions: Prisma.UserWhereInput[] = [];
-
-//   //console.log(filterData);
-//   if (params.searchTerm) {
-//     andCondions.push({
-//       OR: userSearchAbleFields.map((field) => ({
-//         [field]: {
-//           contains: params.searchTerm,
-//           mode: "insensitive",
-//         },
-//       })),
-//     });
-//   }
-
-//   if (Object.keys(filterData).length > 0) {
-//     andCondions.push({
-//       AND: Object.keys(filterData).map((key) => ({
-//         [key]: {
-//           equals: (filterData as any)[key],
-//         },
-//       })),
-//     });
-//   }
-
-//   const whereConditons: Prisma.UserWhereInput =
-//     andCondions.length > 0 ? { AND: andCondions } : {};
-
-//   const result = await prisma.user.findMany({
-//     where: whereConditons,
-//     skip,
-//     take: limit,
-//     orderBy:
-//       options.sortBy && options.sortOrder
-//         ? {
-//             [options.sortBy]: options.sortOrder,
-//           }
-//         : {
-//             createdAt: "desc",
-//           },
-//     select: {
-//       id: true,
-//       email: true,
-//       role: true,
-//       needPasswordChange: true,
-//       status: true,
-//       createdAt: true,
-//       updatedAt: true,
-//       admin: true,
-//       patient: true,
-//       doctor: true,
-//     },
-//   });
-
-//   const total = await prisma.user.count({
-//     where: whereConditons,
-//   });
-
-//   return {
-//     meta: {
-//       page,
-//       limit,
-//       total,
-//     },
-//     data: result,
-//   };
-// };
-
-// const changeProfileStatus = async (id: string, status: UserRole) => {
-//   const userData = await prisma.user.findUniqueOrThrow({
-//     where: {
-//       id,
-//     },
-//   });
-
-//   const updateUserStatus = await prisma.user.update({
-//     where: {
-//       id,
-//     },
-//     data: status,
-//   });
-
-//   return updateUserStatus;
-// };
-
-// const getMyProfile = async (user: IAuthUser) => {
-//   const userInfo = await prisma.user.findUniqueOrThrow({
-//     where: {
-//       email: user?.email,
-//       status: UserStatus.ACTIVE,
-//     },
-//     select: {
-//       id: true,
-//       email: true,
-//       needPasswordChange: true,
-//       role: true,
-//       status: true,
-//     },
-//   });
-
-//   let profileInfo;
-
-//   if (userInfo.role === UserRole.SUPER_ADMIN) {
-//     profileInfo = await prisma.admin.findUnique({
-//       where: {
-//         email: userInfo.email,
-//       },
-//     });
-//   } else if (userInfo.role === UserRole.ADMIN) {
-//     profileInfo = await prisma.admin.findUnique({
-//       where: {
-//         email: userInfo.email,
-//       },
-//     });
-//   } else if (userInfo.role === UserRole.DOCTOR) {
-//     profileInfo = await prisma.doctor.findUnique({
-//       where: {
-//         email: userInfo.email,
-//       },
-//     });
-//   } else if (userInfo.role === UserRole.PATIENT) {
-//     profileInfo = await prisma.patient.findUnique({
-//       where: {
-//         email: userInfo.email,
-//       },
-//     });
-//   }
-
-//   return { ...userInfo, ...profileInfo };
-// };
-
-// const updateMyProfie = async (user: IAuthUser, req: Request) => {
-//   const userInfo = await prisma.user.findUniqueOrThrow({
-//     where: {
-//       email: user?.email,
-//       status: UserStatus.ACTIVE,
-//     },
-//   });
-
-//   const file = req.file as IFile;
-//   if (file) {
-//     const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
-//     req.body.profilePhoto = uploadToCloudinary?.secure_url;
-//   }
-
-//   let profileInfo;
-
-//   if (userInfo.role === UserRole.SUPER_ADMIN) {
-//     profileInfo = await prisma.admin.update({
-//       where: {
-//         email: userInfo.email,
-//       },
-//       data: req.body,
-//     });
-//   } else if (userInfo.role === UserRole.ADMIN) {
-//     profileInfo = await prisma.admin.update({
-//       where: {
-//         email: userInfo.email,
-//       },
-//       data: req.body,
-//     });
-//   } else if (userInfo.role === UserRole.DOCTOR) {
-//     profileInfo = await prisma.doctor.update({
-//       where: {
-//         email: userInfo.email,
-//       },
-//       data: req.body,
-//     });
-//   } else if (userInfo.role === UserRole.PATIENT) {
-//     profileInfo = await prisma.patient.update({
-//       where: {
-//         email: userInfo.email,
-//       },
-//       data: req.body,
-//     });
-//   }
-
-//   return { ...profileInfo };
-// };
-
 export const userService = {
   createAdmin,
   createVendor,
   createCustomer,
-  deleteUsers,
   getUsers,
   updateStatus,
-  //   createDoctor,
-  //   createPatient,
-  //   getAllFromDB,
-  //   changeProfileStatus,
-  //   getMyProfile,
-  //   updateMyProfie,
 };

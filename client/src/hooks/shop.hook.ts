@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createShop, editShop } from "../services/shop/mutation";
+import { getShops } from "../services/shop/serverQuery";
 
 export const useCreateShop = () => {
     // const queryClient = useQueryClient();
@@ -19,6 +20,13 @@ export const useEditShop = () => {
         mutationKey: ["EDIT_SHOP"],
         mutationFn: ({ formData, shopId }: any) =>
             editShop(formData, shopId),
+    });
+};
+
+export const useGetShops = () => {
+    return useQuery({
+        queryKey: ["SHOPS"],
+        queryFn: () => getShops(),
     });
 };
 

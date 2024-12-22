@@ -10,9 +10,27 @@ export const getFollowSuggetionUsers = async () => {
   }
 };
 
+export const getUsers = async () => {
+  try {
+    const { data } = await axiosInstance.get(`/user`);
+    return { data };
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export const updateStatus = async (userId: string, status: string) => {
+  try {
+    const { data } = await axiosInstance.patch(`/user/change-status/${userId}`, { status });
+    return { data };
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
 export const getUser = async (userId: string) => {
   try {
-    const { data } = await axiosInstance.get(`/users/${userId}`);
+    const { data } = await axiosInstance.get(`/user/${userId}`);
     return { data };
   } catch (error: any) {
     throw new Error(error);

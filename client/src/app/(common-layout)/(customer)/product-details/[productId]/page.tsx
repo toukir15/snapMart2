@@ -1,6 +1,5 @@
 import React from "react";
 import "react-inner-image-zoom/lib/InnerImageZoom/styles.css";
-
 import { Rating } from "@smastrom/react-rating";
 import { getProduct, getSuggestedProduct } from "@/src/services/product/query";
 import ProductPreviewImage from "@/src/components/pageComponents/ProductDetails/ProductPreviewImage";
@@ -10,8 +9,6 @@ import AdditionalInformation from "@/src/components/pageComponents/ProductDetail
 import ProductCounter from "@/src/components/pageComponents/ProductDetails/ProductCounter";
 import ProductSuggestion from "@/src/components/pageComponents/ProductDetails/ProductSuggestion";
 import { getCurrentUser } from "@/src/services/auth";
-import { Button } from "@nextui-org/button";
-import Link from "next/link";
 import VendorButtons from "@/src/components/pageComponents/ProductDetails/VendorButtons";
 import AdminButton from "@/src/components/pageComponents/ProductDetails/AdminButton";
 
@@ -66,15 +63,15 @@ export default async function ProductDetailsPage({
             {/* vendor buttons  */}
             {currentUser?.role === "VENDOR" && productData.shopId == currentUser.shopId && <VendorButtons productData={productData} />}
 
-            {currentUser?.role === "VENDOR" && <AdminButton productData={productData} />}
+            {currentUser?.role === "ADMIN" && <AdminButton productData={productData} />}
 
           </div>
         </div >
 
         {/* Description */}
         <div>
-          <h3 className="mt-0 text-2xl font-medium">Description</h3>
-          <p className="mt-4">{productData.description}</p>
+          <h3 className="mt-16 text-2xl font-medium">Description</h3>
+          <p className="mt-1 text-gray-600">{productData.description}</p>
         </div >
 
         {/* Product Suggestions */}

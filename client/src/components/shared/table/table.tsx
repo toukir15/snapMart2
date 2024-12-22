@@ -5,6 +5,7 @@ interface Action {
     label: string;
     onClick: (id: string, record: any) => void;
     className?: string;
+    disabled?: (record: any) => boolean; // Optional disabled condition for actions
 }
 
 interface CustomTableProps {
@@ -20,7 +21,7 @@ export const CustomTable = ({
     data,
     actions = [],
     loading,
-    pageSize = 10,
+    pageSize = 12,
 }: CustomTableProps) => {
     const tableColumns = actions.length
         ? [
@@ -30,15 +31,19 @@ export const CustomTable = ({
                 key: "actions",
                 render: (_: any, record: any) => (
                     <Space size="middle">
-                        {actions.map((action, index) => (
-                            <button
-                                key={index}
-                                onClick={() => action.onClick(record.id, _)}
-                                className={action.className || "bg-blue-500 hover:bg-blue-600 transition duration-150 py-1 px-3 rounded text-white"}
-                            >
-                                {action.label}
-                            </button>
-                        ))}
+                        {actions.map((action, index) => {
+                            const isDisabled = action.disabled?.(record); // Determine if the action is disabled
+                            return (
+                                <button
+                                    key={index}
+                                    onClick={() => !isDisabled && action.onClick(record.id, record)}
+                                    className={`${action.className || "bg-blue-500 hover:bg-blue-600 transition duration-150 py-1 px-3 rounded text-white"} ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+                                    disabled={isDisabled}
+                                >
+                                    {action.label}
+                                </button>
+                            );
+                        })}
                     </Space>
                 ),
             },

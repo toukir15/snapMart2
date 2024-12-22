@@ -1,9 +1,22 @@
 import { Tag } from "antd";
 import dayjs from "dayjs";
 
+
 export const usersColumns = [
     {
-        title: "User Name",
+        title: "Profile Photo",
+        dataIndex: "profilePhoto",
+        key: "profilePhoto",
+        render: (profilePhoto: string) => (
+            <img
+                src={profilePhoto}
+                alt="profilePhoto"
+                style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }}
+            />
+        ),
+    },
+    {
+        title: "Name",
         dataIndex: "name",
         key: "name",
     },
@@ -11,19 +24,51 @@ export const usersColumns = [
         title: "Email",
         dataIndex: "email",
         key: "email",
-        render: (email: string) => <Tag color="lime">{email}</Tag>,
-    },
-    {
-        title: "Address",
-        dataIndex: "address",
-        key: "address",
-        render: (address: string) => <Tag color="purple">{address}</Tag>,
     },
     {
         title: "Role",
         dataIndex: "role",
         key: "role",
-        render: (role: string) => <Tag color="green">{role}</Tag>,
+    },
+    {
+        title: "Status",
+        dataIndex: "status",
+        key: "status",
+        render: (status: string) => <Tag color={`${status == "ACTIVE" ? "green" : "red"}`}>{status}</Tag>,
+    },
+];
+
+export const shopsColumns = [
+    {
+        title: "Logo",
+        dataIndex: "logo",
+        key: "logo",
+        render: (logo: string) => (
+            <img
+                src={logo}
+                alt="logo"
+                style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }}
+            />
+        ),
+    },
+    {
+        title: "Brand",
+        dataIndex: "name",
+        key: "name",
+    },
+    {
+        title: "Role",
+        dataIndex: "role",
+        key: "role",
+    },
+    {
+        title: "Status",
+        dataIndex: "isActive",
+        key: "isActive",
+        render: (status: string) => {
+            console.log(status)
+            return <Tag color={`${status ? "green" : "red"}`}>{status ? "Active" : "Block"}</Tag>
+        },
     },
 ];
 

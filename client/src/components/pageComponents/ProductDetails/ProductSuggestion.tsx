@@ -12,7 +12,7 @@ export default function ProductSuggestion({
 }) {
   return (
     <div>
-      <h3 className="text-xl font-medium mt-8">You may also like</h3>
+      <h3 className="text-xl font-medium mt-16">You may also like</h3>
       <div className="flex gap-4 mt-4 mb-10">
         {productSuggestedData.map((product: IProduct) => {
           const tumbnail = product?.images[0];

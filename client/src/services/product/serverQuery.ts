@@ -60,6 +60,7 @@ export const getProducts = async ({
     const { data } = await axiosInstance.get(query);
     return { data };
   } catch (error: any) {
+    console.log(error)
     throw new Error(
       error.message || "An error occurred while fetching products."
     );

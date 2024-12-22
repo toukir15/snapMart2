@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { IFile } from "../../interfaces/file";
 import prisma from "../../../shared/prisma";
-import { Prisma, Product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { paginationHelper } from "../../../helpars/paginationHelper";
 interface CustomRequest extends Request {
   user?: any;
@@ -313,6 +313,7 @@ const getSuggestedProducts = async (productId: string) => {
 
   return result;
 };
+
 const getBrands = async () => {
   // Fetch all unique brand names from the product table
   const result = await prisma.product.findMany({
@@ -438,7 +439,6 @@ const editProduct = async (req: CustomRequest, productId: string) => {
 
 };
 
-
 const deleteProduct = async (productId: string) => {
   await prisma.product.findUniqueOrThrow({
     where: {
@@ -451,6 +451,7 @@ const deleteProduct = async (productId: string) => {
       id: productId,
     },
   });
+  console.log(result)
 
   return result;
 };

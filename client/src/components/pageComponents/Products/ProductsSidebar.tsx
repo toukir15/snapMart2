@@ -47,7 +47,7 @@ export const ProductSidebar = ({
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold">Filters</h2>
         {checkUseFilter && (
-          <Button onClick={handleClearFilter} color="danger" variant="solid">
+          <Button onClick={handleClearFilter} size="sm" radius="sm" color="danger" variant="solid">
             Clear
           </Button>
         )}

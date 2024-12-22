@@ -8,6 +8,17 @@ interface CustomRequest extends Request {
   user?: any;
 }
 
+const getShops = async () => {
+  const result = await prisma.shop.findMany({
+    include: {
+      vendor: {
+        select: { name: true },
+      },
+    },
+  })
+  return result
+};
+
 const getShop = async (shopId: string) => {
   const result = await prisma.shop.findFirstOrThrow({
     where: {
@@ -18,7 +29,6 @@ const getShop = async (shopId: string) => {
 };
 
 const createShop = async (req: CustomRequest) => {
-  console.log(req.user)
   const file = req.file as IFile;
 
   const findVendor = await prisma.vendor.findFirst({
@@ -131,5 +141,6 @@ export const ShopServices = {
   createShop,
   blackListShop,
   getShop,
-  editShop
+  editShop,
+  getShops
 };

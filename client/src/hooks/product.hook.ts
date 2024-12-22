@@ -17,7 +17,7 @@ export const useGetProducts = ({
   maxPrice,
   productPage,
 }: any) => {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
 
   const queryKey = [
     "PRODUCTS",

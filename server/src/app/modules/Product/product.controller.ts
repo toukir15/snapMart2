@@ -8,7 +8,7 @@ interface CustomRequest extends Request {
   user?: any;
 }
 
-const getProducts = catchAsync(async (req: Request, res: Response) => {
+const getProducts = catchAsync(async (req: CustomRequest, res: Response) => {
   const filters = pick(req.query, ["searchTerm", "category", "brand", "price", "shopId"]);
   const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
   const result = await ProductService.getProducts(filters, options);

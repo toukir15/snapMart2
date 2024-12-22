@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import ImageUploader from "@/src/components/pageComponents/CreateProduct/ImageUploader";
 import { FormInput } from "@/src/components/pageComponents/CreateProduct/ProductInput";
 import { Textarea } from "@nextui-org/input";
-import { useCreateShop, useEditShop } from "@/src/hooks/shop.hook";
+import { useEditShop } from "@/src/hooks/shop.hook";
 import { useRouter } from "next/navigation";
 
 const EditShopForm = ({ shopData }: { shopData: IShop }) => {

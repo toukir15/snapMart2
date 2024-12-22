@@ -37,11 +37,11 @@ router.post(
     return userController.createCustomer(req, res, next);
   }
 );
-router.delete("/", userController.deleteUsers);
+
 
 router.patch(
   "/change-status/:userId",
-  auth(UserRole.ADMIN),
+  // auth(UserRole.ADMIN),
   userController.updateStatus
 );
 
