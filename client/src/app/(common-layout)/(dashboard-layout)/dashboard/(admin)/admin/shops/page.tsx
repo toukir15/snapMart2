@@ -4,6 +4,7 @@ import { CustomTable } from "@/src/components/shared/table/table";
 import { shopsColumns } from "@/src/components/shared/table/table.const";
 import { useGetShops, useUpdateStatus } from "@/src/hooks/shop.hook";
 import { showConfirmation } from "@/src/utils/showConfirmation";
+import { Button } from "@nextui-org/button";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
 
@@ -56,14 +57,16 @@ export default function UserManagementPage() {
     }, [isSuccessUpdateUser, updateStatusData]);
 
     return (
-        <div className="xl:px-4 lg:px-32 mt-8 lg:mt-20">
-            <CustomTable
-                columns={shopsColumns}
-                data={usersData?.data?.data || []}
-                actions={actions}
-                loading={isUserDataLoading}
-                pageSize={12}
-            />
-        </div>
+        <>
+            <div className="xl:px-4 lg:px-32 mt-8 lg:mt-20">
+                <CustomTable
+                    columns={shopsColumns}
+                    data={usersData?.data?.data || []}
+                    loading={isUserDataLoading}
+                    actions={actions}
+                    pageSize={12}
+                />
+            </div>
+        </>
     );
 }

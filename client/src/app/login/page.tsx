@@ -5,13 +5,14 @@ import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import logo from "../../../public/logo.png";
+import authImg from "../../../public/auth.png"
 import { useUserLogin } from "@/src/hooks/auth.hook";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { FieldValues, useForm } from "react-hook-form";
 
 export default function LoginPage() {
-  const { mutate: handleLogin, error, isSuccess } = useUserLogin();
+  const { mutate: handleLogin, error, isSuccess, isLoading } = useUserLogin();
   const router = useRouter();
 
   const {
@@ -34,76 +35,87 @@ export default function LoginPage() {
   }, [isSuccess]);
 
   // Handle form submission
-  const onSubmit = (data: { email: string; password: string }) => {
+  const onSubmit = (data: FieldValues) => {
     handleLogin(data);
   };
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="xl:bg-[#F7F7F7] w-[400px] xl:w-[600px] shadow-lg py-[80px] rounded-2xl flex justify-center items-center flex-col">
+    <div className="flex flex-col lg:flex-row h-screen w-full">
+      {/* Left Side */}
+      <div className="flex w-full h-screen lg:w-1/2 items-center justify-center px-8 lg:px-20 py-10 lg:py-0">
+        <div className="w-full max-w-md">
+          <div className="mb-8">
+            <h1 className="text-3xl lg:text-4xl text-gray-900 font-bold ">
+              Sign in
+            </h1>
+            <p className="mt-2 text-gray-600 ">
+              Don't have an account?{" "}
+              <a href="/signup" className="text-blue-500 hover:underline">
+                Sign up
+              </a>
+            </p>
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div>
+              <Input
+                {...register("email", { required: "Email is required" })}
+                type="email"
+                radius="sm"
+                label="Email"
+                size="sm"
+                isInvalid={!!errors.email}
+                errorMessage={errors.email?.message}
+              />
+            </div>
+            <div>
+              <Input
+                {...register("password", { required: "Password is required" })}
+                type="password"
+                radius="sm"
+                label="Password"
+                size="sm"
+                isInvalid={!!errors.password}
+                errorMessage={errors.password?.message}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <a
+                href="/forgot-password"
+                className="text-sm text-blue-500 hover:underline"
+              >
+                Forgot password?
+              </a>
+            </div>
+            <Button
+              type="submit"
+              className="w-full rounded-md bg-[#F85606] py-2 px-4 text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              isDisabled={isLoading}
+            >
+              {isLoading ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+        </div>
+      </div>
+
+      {/* Right Side */}
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-gray-950 to-blue-950 items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-white text-3xl lg:text-4xl font-bold mb-6">
+            Welcome to SnapMart
+          </h2>
+          <p className="text-gray-300 text-base lg:text-lg mb-8 px-4 lg:px-10">
+            A dashboard for managing portfolio content enables quick updates to
+            projects, blogs, and skills without coding, keeping the portfolio dynamic and up-to-date.
+          </p>
           <Image
-            src={logo} // Replace with your logo
+            src={authImg}
+            alt="Authentication Illustration"
             width={300}
             height={300}
-            alt="logo"
-            className="w-16 mb-4"
+            className="mx-auto"
           />
-          <h3 className="text-2xl font-medium mb-8">SnapMart</h3>
-
-          {/* Email Field */}
-          <div className="flex flex-col w-4/5 md:w-3/5 mb-4 xl:mb-6">
-            <Input
-              {...register("email", { required: "Email is required" })}
-              variant="bordered"
-              label="Email"
-              type="email"
-              radius="sm"
-              required
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )}
-          </div>
-
-          {/* Password Field */}
-          <div className="flex flex-col w-4/5 md:w-3/5 mb-4 xl:mb-6">
-            <Input
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-              })}
-              variant="bordered"
-              label="Password"
-              type="password"
-              radius="sm"
-              required
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
-            )}
-          </div>
-
-          <Button
-            type="submit"
-            className="w-4/5 md:w-3/5 py-[10px] bg-[#FE5417] px-12 rounded-xl font-bold mt-2"
-          >
-            Login
-          </Button>
-
-          <p className="text-[#b5b4b4] mt-3 md:mt-4">
-            Don't have an account?{" "}
-            <Link
-              href={`/signup`}
-              className="hover:cursor-pointer hover:underline hover:text-[#959595]">
-              Sign Up
-            </Link>
-          </p>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

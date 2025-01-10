@@ -17,8 +17,10 @@ import {
     IProductProviderValues,
     ProductContext,
 } from "../../context/product.provider";
+import profileImg from "../../../public/profile.jpeg";
 import { useGetCartCount } from "../../hooks/cartItem.hook";
-
+import Image from "next/image";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
 
 const ServerNavbar = () => {
     const [cartCount, setCartCount] = useState(5);
@@ -26,9 +28,6 @@ const ServerNavbar = () => {
         ProductContext
     ) as IProductProviderValues;
     const { setSearchTerm, searchTerm } = productStates;
-
-    // const { data } = useGetCartCount()
-
 
     const handleSearchKeyPress = (e: any) => {
         if (e.key === "Enter") {
@@ -41,10 +40,11 @@ const ServerNavbar = () => {
     };
 
     const handleSearchOnChange = (e: any) => {
-        if (e.target.value == "") {
+        if (e.target.value === "") {
             setSearchTerm("");
         }
     };
+
     const searchInput = (
         <Input
             onKeyDown={handleSearchKeyPress}
@@ -95,12 +95,36 @@ const ServerNavbar = () => {
                             <span className="absolute -top-2 -right-2 bg-white text-orange-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                                 0
                             </span>
-                            {/* {data?.data.data && (
-                    <span className="absolute -top-2 -right-2 bg-white text-orange-600 text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                      {data?.data.data}
-                    </span>
-                  )} */}
                         </Link>
+                    </NavbarItem>
+                    <NavbarItem className="hidden lg:flex relative">
+                        <Dropdown placement="bottom-end">
+                            <DropdownTrigger>
+                                <div className="border-2 rounded-full p-[2px] cursor-pointer">
+                                    <Image
+                                        className="rounded-full"
+                                        src={profileImg}
+                                        height={32}
+                                        width={32}
+                                        alt="profile"
+                                    />
+                                </div>
+                            </DropdownTrigger>
+                            <DropdownMenu
+                                aria-label="User Actions"
+                                variant="light"
+                                className="w-48"
+                            >
+                                <DropdownItem key="dashboard">
+                                    <NextLink href="/dashboard/admin">Dashboard</NextLink>
+                                </DropdownItem>
+                                <DropdownItem key="logout">
+                                    <button onClick={() => console.log("Logout clicked")}>
+                                        Logout
+                                    </button>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
                     </NavbarItem>
                 </NavbarContent>
 

@@ -4,22 +4,29 @@
 
 
 /* Add this to your global CSS file (e.g., globals.css) */
+.ant-menu-item{
+  font-weight: 600;
+  font-size: medium;
+  color: #484848 !important;
+}
 .ant-menu-item-selected {
-  background-color: #F85807 !important; /* Light green background */
+  background-color: #F85807 !important;
+  color: white !important;
+  font-weight: 600;
 }
 
 .ant-menu {
-  background: black;
+  background: white;
 }
 
 .ant-layout-sider-trigger {
-  background-color: #121212 !important; /* Set your desired background color */
-  color: #fff; /* Optional: Change the text/icon color */
+  background-color: rgb(71, 71, 71) !important; /* Set your desired background color */
+  color: black; /* Optional: Change the text/icon color */
 }
 
 /* Optional: Adjust hover effect for the collapse button */
 .ant-layout-sider-trigger:hover {
-  background-color: #555 !important; /* Set a different color on hover if needed */
+  background-color: rgb(98, 98, 98) !important; /* Set a different color on hover if needed */
 }
 
 .ant-spin-dot-item {
@@ -27,4 +34,37 @@
 }
 .swiper-pagination{
   display: none;
+}
+.ant-layout-sider-children{
+  background-color: white !important;
+}
+
+.ant-menu-sub{
+  font-size: small !important;
+}
+.ant-menu-title-content{
+  font-size: medium;
+  font-weight: 600;
+}
+
+
+
+:root {
+  --menu-selected-color: #ff8818; /* Set your custom selected color */
+  --menu-bg-selected: #fff3e6;
+}
+
+.ant-menu-item-selected,
+.ant-menu-submenu-selected {
+  color: var(--menu-selected-color) !important;
+  background-color: var(--menu-bg-selected) !important;
+}
+
+.ant-menu-item-selected a,
+.ant-menu-submenu-selected a {
+  color: var(--menu-selected-color) !important;
+}
+:where(.css-dev-only-do-not-override-1kf000u).ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title,
+:where(.css-dev-only-do-not-override-1kf000u).ant-menu-light > .ant-menu .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: #ff8818 !important; /* Your desired color */
 }
