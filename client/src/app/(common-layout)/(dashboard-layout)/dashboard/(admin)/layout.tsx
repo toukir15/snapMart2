@@ -72,7 +72,6 @@ export default function RootLayout({
         }}
       >
 
-        {/* Logo Section */}
         <Link
           href={"/"}
           className="flex  items-center gap-1 px-6 py-4"
@@ -98,7 +97,7 @@ export default function RootLayout({
       </Sider>
 
       <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
-        <div className="py-2 px-8 bg-[#EFF3F4]">
+        <div className="py-2 px-14 bg-[#EFF3F4]">
           <header className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold">Dashboard</h1>
