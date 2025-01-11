@@ -77,6 +77,42 @@ export const shopsColumns = [
     },
 ];
 
+export const brandColumns = [
+    {
+        title: "Logo",
+        dataIndex: "logo",
+        key: "logo",
+        render: (logo: string) => (
+            <img
+                src={logo}
+                alt="logo"
+                style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }}
+            />
+        ),
+    },
+    {
+        title: "Name",
+        dataIndex: "name",
+        key: "name",
+    },
+    {
+        title: "Created At",
+        dataIndex: "createdAt",
+        key: "createdAt",
+        render: (createdAt: string) => {
+            return <Tag color="pink">{dayjs(createdAt).format("YYYY-MM-DD")}</Tag>;
+        },
+    },
+    {
+        title: "Last Update",
+        dataIndex: "updatedAt",
+        key: "updatedAt",
+        render: (updatedAt: string) => {
+            return <Tag color="geekblue">{dayjs(updatedAt).format("YYYY-MM-DD")}</Tag>;
+        },
+    },
+];
+
 export const productColumns = [
     {
         title: "ProductName",

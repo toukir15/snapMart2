@@ -4,7 +4,6 @@ import { CustomTable } from "@/src/components/shared/table/table";
 import { shopsColumns } from "@/src/components/shared/table/table.const";
 import { useGetShops, useUpdateStatus } from "@/src/hooks/shop.hook";
 import { showConfirmation } from "@/src/utils/showConfirmation";
-import { Button } from "@nextui-org/button";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
 

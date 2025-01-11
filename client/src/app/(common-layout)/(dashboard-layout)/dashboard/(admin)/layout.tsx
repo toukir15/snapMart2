@@ -97,8 +97,8 @@ export default function RootLayout({
       </Sider>
 
       <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
-        <div className="py-2 px-14 bg-[#EFF3F4]">
-          <header className="flex justify-between items-center">
+        <header className="py-[12px] px-14 bg-white">
+          <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold">Dashboard</h1>
             </div>
@@ -127,13 +127,13 @@ export default function RootLayout({
                 </div>
               </div>
             </div>
-          </header>
-        </div>
+          </div>
+        </header>
 
         {/* Main content area */}
         <Content>
           {/* Main content */}
-          <div className="xl:p-6 min-h-[360px] bg-[#EFF3F4] rounded-lg">
+          <div className="xl:p-6 min-h-[calc(100vh-70px)] bg-[#EFF3F4] rounded-lg">
             {children}
           </div>
         </Content>

@@ -33,9 +33,11 @@ export const CustomTable = ({
                     <Space size="middle">
                         {actions.map((action, index) => {
                             const isDisabled = action.disabled?.(record); // Determine if the action is disabled
+                            const actionKey = `${record.id || "record"}-${action.label || "action"}-${index}`;
+                            console.log("Actions Key", actionKey); // Debug key generation
                             return (
                                 <button
-                                    key={index}
+                                    key={actionKey}
                                     onClick={() => !isDisabled && action.onClick(record.id, record)}
                                     className={`${action.className || "bg-blue-500 hover:bg-blue-600 transition duration-150 py-1 px-3 rounded text-white"} ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
                                     disabled={isDisabled}
@@ -53,7 +55,11 @@ export const CustomTable = ({
     return (
         <Table
             columns={tableColumns}
-            dataSource={data.map((item) => ({ ...item, key: item._id }))}
+            dataSource={data.map((item, index) => {
+                const rowKey = item._id || index;
+                console.log("DataSource Key", rowKey); // Debug key generation
+                return { ...item, key: rowKey };
+            })}
             pagination={{ pageSize }}
             loading={loading}
             scroll={{ x: "max-content" }}
