@@ -11,6 +11,11 @@ router.get(
   // auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.VENDOR),
   CategoryController.getCategories
 );
+router.get(
+  "/:categoryId",
+  // auth(UserRole.ADMIN, UserRole.VENDOR, UserRole.VENDOR),
+  CategoryController.getCategory
+);
 
 router.post(
   "/",
@@ -21,6 +26,7 @@ router.post(
 router.patch(
   "/:categoryId",
   // auth(UserRole.ADMIN),
+  multerUpload.single("file"),
   CategoryController.editCategory
 );
 router.delete(

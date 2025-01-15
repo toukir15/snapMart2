@@ -23,7 +23,7 @@ const moduleRoutes = [
     route: AuthRoutes,
   },
   {
-    path: "/cupon",
+    path: "/coupon",
     route: CuponRoutes,
   },
   {

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { Button, Select, SelectItem } from "@nextui-org/react";
 import { useCreateProduct } from "@/src/hooks/product.hook";
-import { useGetCategory } from "@/src/hooks/category.hook";
 import PageLoading from "@/src/components/loading/PageLoading";
 import { toast } from "sonner";
 import ImageUploader from "@/src/components/pageComponents/CreateProduct/ImageUploader";
@@ -11,12 +10,13 @@ import { FormInput } from "@/src/components/pageComponents/CreateProduct/Product
 import { DEPARTMENTS } from "@/src/const";
 import { Category, Department, ProductFormData } from "@/src/types/createProduct";
 import { Textarea } from "@nextui-org/input";
+import { useGetCategories } from "@/src/hooks/category.hook";
 
 const ProductForm = () => {
     const { mutate: handleCreateProduct, isLoading, isSuccess } = useCreateProduct();
     const [imagePreviews, setImagePreviews] = useState<{ file: File; preview: string }[]>([]);
     const [productFiles, setProductFiles] = useState<File[]>([]);
-    const { data: categoryData } = useGetCategory();
+    const { data: categoryData } = useGetCategories();
     const categories: Category[] = categoryData?.data?.data.map(({ id, name }: { id: string, name: string }) => ({
         key: id,
         label: name,

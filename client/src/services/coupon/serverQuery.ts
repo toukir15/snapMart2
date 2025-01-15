@@ -1,18 +1,18 @@
 "use server"
 import axiosInstance from "@/src/lib/axiosInstance";
 
-export const getCategories = async () => {
+export const getCoupons = async () => {
     try {
-        const { data } = await axiosInstance.get(`/category`);
+        const { data } = await axiosInstance.get(`/coupon`);
         return { data };
     } catch (error) {
         throw error;
     }
 };
 
-export const getCategory = async (id: string) => {
+export const getCoupon = async (id: string) => {
     try {
-        const { data } = await axiosInstance.get(`/category/${id}`);
+        const { data } = await axiosInstance.get(`/coupon/${id}`);
         return { data };
     } catch (error) {
         throw error;

@@ -1,31 +1,47 @@
 "use client";
-import React from "react";
+
+import { useEditCategory, useGetCategory } from "@/src/hooks/category.hook";
+import { useGetCoupon } from "@/src/hooks/coupon.hook";
+import { Toast } from "@/src/utils/toast";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 
-const CreateBrandPage = () => {
+export const EditCouponForm = ({ id }: { id: string }) => {
     const {
         register,
         handleSubmit,
         reset,
         formState: { errors },
     } = useForm();
+    const { data } = useGetCoupon(id);
+    const couponData = data?.data.data
+    console.log(couponData)
+    const { mutate: handleEditCategory, isLoading, isSuccess } = useEditCategory()
+    const router = useRouter()
 
-    const onSubmit = (data: FieldValues) => {
-        console.log("Form Data:", data);
+    const onSubmit = async (data: FieldValues) => {
 
-        // Reset the form
-        reset();
     };
+
+    useEffect(() => {
+        if (isSuccess) {
+            Toast("success", "Edited category successfully!")
+            router.push("/dashboard/admin/category")
+            reset();
+        }
+    }, [isSuccess])
 
     return (
         <div className="flex justify-center px-8 bg-gray-100 mt-10">
             <div className="bg-white rounded-lg shadow-md w-full">
                 {/* Page Title and Manage Button */}
                 <div className="flex justify-between items-center px-6 border-b py-4">
-                    <h1 className="text-xl font-bold text-gray-800">Create Coupon</h1>
-                    <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600">
+                    <h1 className="text-xl font-bold text-gray-800">Edit Coupon</h1>
+                    <Link href={"/dashboard/admin/coupon"} className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600">
                         Manage Coupons
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Form */}
@@ -42,6 +58,7 @@ const CreateBrandPage = () => {
                             <input
                                 type="text"
                                 id="couponCode"
+                                defaultValue={couponData?.couponCode}
                                 {...register("couponCode", {
                                     required: "Coupon code is required",
                                 })}
@@ -69,6 +86,7 @@ const CreateBrandPage = () => {
                             <input
                                 type="number"
                                 id="discountValue"
+                                defaultValue={couponData?.discountValue}
                                 {...register("discountValue", {
                                     required: "Discount value is required",
                                     min: { value: 0, message: "Value must be at least 0" },
@@ -97,6 +115,7 @@ const CreateBrandPage = () => {
                             </label>
                             <textarea
                                 id="description"
+                                defaultValue={couponData?.description}
                                 {...register("description")}
                                 rows={1}
                                 placeholder="Enter Description (Optional)"
@@ -115,6 +134,7 @@ const CreateBrandPage = () => {
                             <input
                                 type="date"
                                 id="startDate"
+                                defaultValue={couponData?.startDate ? couponData?.startDate.split("T")[0] : ""}
                                 {...register("startDate", {
                                     required: "Start date is required",
                                 })}
@@ -141,6 +161,7 @@ const CreateBrandPage = () => {
                             <input
                                 type="date"
                                 id="endDate"
+                                defaultValue={couponData?.endDate ? couponData?.endDate.split("T")[0] : ""}
                                 {...register("endDate", {
                                     required: "End date is required",
                                 })}
@@ -155,15 +176,17 @@ const CreateBrandPage = () => {
                                 </p>
                             )}
                         </div>
+
                     </div>
 
                     {/* Submit Button */}
                     <div className="border-t py-4 px-6">
                         <button
+                            disabled={isLoading}
                             type="submit"
                             className="bg-orange-500 font-medium text-white px-6 py-2 rounded-md hover:bg-orange-600"
                         >
-                            Create Coupon
+                            {isLoading ? "Editing..." : "Edit Coupon"}
                         </button>
                     </div>
                 </form>
@@ -172,4 +195,3 @@ const CreateBrandPage = () => {
     );
 };
 
-export default CreateBrandPage;

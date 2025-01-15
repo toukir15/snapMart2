@@ -15,6 +15,17 @@ const getCategories = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getCategory = catchAsync(async (req: Request, res: Response) => {
+  const result = await CategoryServices.getCategory(req.params.categoryId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Category retrives successfully",
+    data: result,
+  });
+});
+
 const createCategory = catchAsync(async (req: Request, res: Response) => {
   const result = await CategoryServices.createCategory(req);
 
@@ -27,8 +38,7 @@ const createCategory = catchAsync(async (req: Request, res: Response) => {
 });
 
 const editCategory = catchAsync(async (req: Request, res: Response) => {
-  const categoryId = req.params.categoryId;
-  const result = await CategoryServices.editCategory(categoryId, req.body);
+  const result = await CategoryServices.editCategory(req.params.categoryId, req);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -54,4 +64,5 @@ export const CategoryController = {
   editCategory,
   deleteCategory,
   getCategories,
+  getCategory
 };

@@ -113,6 +113,75 @@ export const brandColumns = [
     },
 ];
 
+export const couponColumns = [
+
+    {
+        title: "Coupon Code",
+        dataIndex: "couponCode",
+        key: "couponCode",
+    },
+    {
+        title: "Description",
+        dataIndex: "description",
+        key: "description",
+        render: (description: string) => {
+            return <>{description.length > 15 ? description.slice(0, 15) : description}</>;
+        },
+    },
+    {
+        title: "Created At",
+        dataIndex: "startDate",
+        key: "startDate",
+        render: (startDate: string) => {
+            return <Tag color="pink">{dayjs(startDate).format("YYYY-MM-DD")}</Tag>;
+        },
+    },
+    {
+        title: "End Date",
+        dataIndex: "endDate",
+        key: "endDate",
+        render: (endDate: string) => {
+            return <Tag color="geekblue">{dayjs(endDate).format("YYYY-MM-DD")}</Tag>;
+        },
+    },
+];
+
+export const categoriesColumn = [
+    {
+        title: "Image",
+        dataIndex: "image",
+        key: "image",
+        render: (logo: string) => (
+            <img
+                src={logo}
+                alt="logo"
+                style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 4 }}
+            />
+        ),
+    },
+    {
+        title: "Name",
+        dataIndex: "name",
+        key: "name",
+    },
+    {
+        title: "Created At",
+        dataIndex: "createdAt",
+        key: "createdAt",
+        render: (createdAt: string) => {
+            return <Tag color="pink">{dayjs(createdAt).format("YYYY-MM-DD")}</Tag>;
+        },
+    },
+    {
+        title: "Last Update",
+        dataIndex: "updatedAt",
+        key: "updatedAt",
+        render: (updatedAt: string) => {
+            return <Tag color="geekblue">{dayjs(updatedAt).format("YYYY-MM-DD")}</Tag>;
+        },
+    },
+];
+
 export const productColumns = [
     {
         title: "ProductName",
