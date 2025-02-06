@@ -1,7 +1,7 @@
 "use client";
 
 import { useEditCategory, useGetCategory } from "@/src/hooks/category.hook";
-import { useGetCoupon } from "@/src/hooks/coupon.hook";
+import { useEditCoupon, useGetCoupon } from "@/src/hooks/coupon.hook";
 import { Toast } from "@/src/utils/toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,21 +17,45 @@ export const EditCouponForm = ({ id }: { id: string }) => {
     } = useForm();
     const { data } = useGetCoupon(id);
     const couponData = data?.data.data
-    console.log(couponData)
-    const { mutate: handleEditCategory, isLoading, isSuccess } = useEditCategory()
+    const { mutate, isLoading, isSuccess, error } = useEditCoupon()
     const router = useRouter()
 
     const onSubmit = async (data: FieldValues) => {
-
+        const formattedData = {
+            ...data,
+            discountValue: Number(data.discountValue),
+            startDate: new Date(data.startDate).toISOString(),
+            endDate: new Date(data.endDate).toISOString(),
+        };
+        mutate({ id: couponData.id, data: formattedData })
     };
 
     useEffect(() => {
+        if (couponData) {
+            reset({
+                couponCode: couponData?.couponCode,
+                discountValue: couponData?.discountValue,
+                description: couponData?.description,
+                startDate: couponData?.startDate?.split("T")[0] || "",
+                endDate: couponData?.endDate?.split("T")[0] || "",
+            });
+        }
+    }, [couponData, reset]);
+
+    useEffect(() => {
         if (isSuccess) {
-            Toast("success", "Edited category successfully!")
-            router.push("/dashboard/admin/category")
-            reset();
+            Toast("error", "Somthing is wrong!")
+            // router.push("/dashboard/admin/coupon")
         }
     }, [isSuccess])
+
+    // useEffect(() => {
+    //     if (error) {
+    //         Toast("success", "Edited category successfully!")
+    //         router.push("/dashboard/admin/coupon")
+    //         reset();
+    //     }
+    // }, [error])
 
     return (
         <div className="flex justify-center px-8 bg-gray-100 mt-10">

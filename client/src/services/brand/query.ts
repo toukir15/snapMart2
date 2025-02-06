@@ -1,26 +1,25 @@
-export const getCategories = async () => {
+export const getBrands = async () => {
   try {
     const fetchOption = {
       next: {
-        tags: ["categories"],
+        tags: ["brand"],
       },
     };
 
     const res = await fetch(
-      `http://localhost:5000/api/v1/category`,
+      `http://localhost:5000/api/v1/brand`,
       fetchOption
     );
 
     if (!res.ok) {
       const errorData = await res.json();
       throw new Error(
-        `Failed to fetch products: ${errorData.message || res.status}`
+        `Failed to fetch brands: ${errorData.message || res.status}`
       );
     }
 
     return await res.json();
   } catch (error) {
-    console.error("Error fetching products:", error);
     throw error;
   }
 };

@@ -1,8 +1,7 @@
 "use client";
 import { useCreateCoupon } from "@/src/hooks/coupon.hook";
-import { Toast } from "@/src/utils/toast";
-import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import Link from "next/link";
+import React from "react";
 import { FieldValues, useForm } from "react-hook-form";
 
 const CreateBrandPage = () => {
@@ -12,9 +11,10 @@ const CreateBrandPage = () => {
         reset,
         formState: { errors },
     } = useForm();
-    const router = useRouter()
-    const { mutate, isSuccess, isLoading } = useCreateCoupon()
-
+    const { mutate, isLoading, isSuccess } = useCreateCoupon()
+    if (isSuccess) {
+        reset()
+    }
     const onSubmit = (data: FieldValues) => {
         const formattedData = {
             ...data,
@@ -23,19 +23,7 @@ const CreateBrandPage = () => {
             endDate: new Date(data.endDate).toISOString(),
         };
         mutate(formattedData)
-
-        // Reset the form
-        // reset();
     };
-
-    useEffect(() => {
-        if (isSuccess) {
-            Toast("success", "Created category successfully!")
-            // router.push("/dashboard/admin/category")
-            reset();
-        }
-    }, [isSuccess])
-
 
     return (
         <div className="flex justify-center px-8 bg-gray-100 mt-10">
@@ -43,9 +31,9 @@ const CreateBrandPage = () => {
                 {/* Page Title and Manage Button */}
                 <div className="flex justify-between items-center px-6 border-b py-4">
                     <h1 className="text-xl font-bold text-gray-800">Create Coupon</h1>
-                    <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600">
+                    <Link href={"/dashboard/admin/coupon"} className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600">
                         Manage Coupons
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Form */}

@@ -7,7 +7,7 @@
 .ant-menu-item{
   font-weight: 600;
   font-size: medium;
-  color: #484848 !important;
+  color: white !important;
 }
 .ant-menu-item-selected {
   background-color: #F85807 !important;
@@ -16,17 +16,17 @@
 }
 
 .ant-menu {
-  background: white;
+  background: #323240;
 }
 
 .ant-layout-sider-trigger {
   background-color: rgb(71, 71, 71) !important; /* Set your desired background color */
-  color: black; /* Optional: Change the text/icon color */
+  color: white !important; /* Optional: Change the text/icon color */
 }
 
 /* Optional: Adjust hover effect for the collapse button */
 .ant-layout-sider-trigger:hover {
-  background-color: rgb(98, 98, 98) !important; /* Set a different color on hover if needed */
+  background-color: #323240 !important; /* Set a different color on hover if needed */
 }
 
 .ant-spin-dot-item {
@@ -36,7 +36,10 @@
   display: none;
 }
 .ant-layout-sider-children{
-  background-color: white !important;
+  background-color: #323240 !important;
+}
+.ant-menu-submenu-title{
+  color: white !important;
 }
 
 .ant-menu-sub{
@@ -46,8 +49,6 @@
   font-size: medium;
   font-weight: 600;
 }
-
-
 
 :root {
   --menu-selected-color: #ff8818; /* Set your custom selected color */
@@ -60,10 +61,22 @@
   background-color: var(--menu-bg-selected) !important;
 }
 
-.ant-menu-item-selected a,
+.ant-menu-sub{
+  background-color: #272731 !important;
+}
+
+.ant-select-outlined:focus,
+.ant-select-outlined:active,
+.ant-select-focused .ant-select-selector {
+  outline-color: #F97316 !important;
+  border-color: #F97316 !important; 
+  box-shadow: 0 0 0 0px rgb(255, 255, 255) !important; 
+}
+
+/* .ant-menu-item-selected a,
 .ant-menu-submenu-selected a {
   color: var(--menu-selected-color) !important;
-}
+} */
 :where(.css-dev-only-do-not-override-1kf000u).ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title,
 :where(.css-dev-only-do-not-override-1kf000u).ant-menu-light > .ant-menu .ant-menu-submenu-selected > .ant-menu-submenu-title {
   color: #ff8818 !important; /* Your desired color */

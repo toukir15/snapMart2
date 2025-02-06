@@ -9,6 +9,10 @@ const router = express.Router();
 
 router.get("/", auth(UserRole.ADMIN), userController.getUsers);
 
+router.get("/admin", auth(UserRole.ADMIN), userController.getUsers);
+router.get("/vendor", auth(UserRole.ADMIN), userController.getVendors);
+router.get("/customer", auth(UserRole.ADMIN), userController.getCustomers);
+
 router.post(
   "/create-admin",
   // auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),

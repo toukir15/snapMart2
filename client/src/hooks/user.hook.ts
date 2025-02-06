@@ -1,10 +1,31 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUsers, updateStatus } from "../services/user";
+import { getAdmins, getCustomers, getUsers, getVendors, updateStatus } from "../services/user";
 
 export const useGetUsers = () => {
     return useQuery({
         queryKey: ["USERS"],
         queryFn: () => getUsers(),
+    });
+};
+
+export const useGetAdmins = () => {
+    return useQuery({
+        queryKey: ["ADMINS"],
+        queryFn: () => getAdmins(),
+    });
+};
+
+export const useGetVendors = () => {
+    return useQuery({
+        queryKey: ["VENDORS"],
+        queryFn: () => getVendors(),
+    });
+};
+
+export const useGetCustomer = () => {
+    return useQuery({
+        queryKey: ["CUSTOMERS"],
+        queryFn: () => getCustomers(),
     });
 };
 

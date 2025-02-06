@@ -116,7 +116,10 @@ const ServerNavbar = () => {
                                 className="w-48"
                             >
                                 <DropdownItem key="dashboard">
-                                    <NextLink href="/dashboard/admin">Dashboard</NextLink>
+                                    <NextLink href="/dashboard/vendor">Vendor</NextLink>
+                                </DropdownItem>
+                                <DropdownItem key="dashboard">
+                                    <NextLink href="/dashboard/admin">Admin</NextLink>
                                 </DropdownItem>
                                 <DropdownItem key="logout">
                                     <button onClick={() => console.log("Logout clicked")}>

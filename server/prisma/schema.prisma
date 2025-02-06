@@ -53,20 +53,6 @@ model Vendor {
   @@map("vendors")
 }
 
-model Cupon {
-  id            String   @id @default(uuid())
-  couponCode    String
-  discountValue Int
-  description   String?
-  startDate     DateTime
-  endDate       DateTime
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("cupons")
-}
-
 model Customer {
   id           String     @id @default(uuid())
   name         String
@@ -83,6 +69,20 @@ model Customer {
   follow       Follow?
 
   @@map("customers")
+}
+
+model Cupon {
+  id            String   @id @default(uuid())
+  couponCode    String   @unique
+  discountValue Int
+  description   String?
+  startDate     DateTime
+  endDate       DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cupons")
 }
 
 model Shop {

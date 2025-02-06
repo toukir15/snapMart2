@@ -23,6 +23,7 @@ const createCupon = async (payload: Cupon) => {
 };
 
 const editCoupon = async (id: string, data: Partial<Cupon>) => {
+  console.log(data)
   const result = await prisma.cupon.update({
     where: {
       id: id

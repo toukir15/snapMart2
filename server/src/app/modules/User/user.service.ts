@@ -121,6 +121,45 @@ const createCustomer = async (req: Request) => {
   return result;
 };
 
+const getAdmins = async () => {
+  // Fetch users excluding ADMIN
+  const users = await prisma.admin.findMany();
+
+  // Custom sort logic for status
+  const sortedUsers = users.sort((a, b) => {
+    const statusOrder = ["ACTIVE", "BLOCKED", "DELETED"];
+    return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+  });
+
+  return sortedUsers;
+};
+
+const getVendors = async () => {
+  // Fetch users excluding ADMIN
+  const users = await prisma.vendor.findMany();
+
+  // Custom sort logic for status
+  const sortedUsers = users.sort((a, b) => {
+    const statusOrder = ["ACTIVE", "BLOCKED", "DELETED"];
+    return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+  });
+
+  return sortedUsers;
+};
+
+const getCustomers = async () => {
+  // Fetch users excluding ADMIN
+  const users = await prisma.user.findMany();
+
+  // Custom sort logic for status
+  const sortedUsers = users.sort((a, b) => {
+    const statusOrder = ["ACTIVE", "BLOCKED", "DELETED"];
+    return statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status);
+  });
+
+  return sortedUsers;
+};
+
 const updateStatus = async (id: string, newStatus: UserStatus) => {
   await prisma.user.findFirstOrThrow({
     where: {
@@ -147,4 +186,7 @@ export const userService = {
   createCustomer,
   getUsers,
   updateStatus,
+  getAdmins,
+  getVendors,
+  getCustomers
 };

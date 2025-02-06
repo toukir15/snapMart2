@@ -53,7 +53,7 @@ export default function page() {
         <>
             <div className="xl:px-4 lg:px-32 mt-8 lg:mt-20 rounded-lg bg-white">
                 <div className="py-6 flex justify-end">
-                    <Link href={"/dashboard/admin/coupon/edit-coupon"} className="w-fit py-2 px-4 font-medium bg-orange-500 text-white rounded-md shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Create Coupon</Link>
+                    <Link href={"/dashboard/admin/coupon/create-coupon"} className="w-fit py-2 px-4 font-medium bg-orange-500 text-white rounded-md shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Create Coupon</Link>
                 </div>
                 <CustomTable
                     columns={couponColumns}

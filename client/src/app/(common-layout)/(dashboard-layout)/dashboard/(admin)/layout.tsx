@@ -1,11 +1,10 @@
 "use client";
 import "@/src/styles/globals.css";
-import { Layout, Menu, Breadcrumb, theme } from "antd";
+import { Layout, Menu } from "antd";
 import { useContext, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Logo, SearchIcon } from "@/src/components/icons";
-import { AdminSidebarRoutes, VendorSidebarRoutes } from "@/src/const";
+import { AdminSidebarRoutes } from "@/src/const";
 import { Input } from "@nextui-org/input";
 import { IProductProviderValues, ProductContext } from "@/src/context/product.provider";
 import profileImg from "../../../../../../public/profile.jpeg"
@@ -77,11 +76,11 @@ export default function RootLayout({
           className="flex  items-center gap-1 px-6 py-4"
         >
           <div className="relative top-1">
-            <Logo color="black" />
+            <Logo color="white" />
           </div>
           {/* Conditionally render text based on the collapsed state */}
           {!collapsed && (
-            <span className="text-xl font-medium relative top-1 text-black">
+            <span className="text-xl font-medium relative top-1 text-white">
               SnapMart
             </span>
           )}

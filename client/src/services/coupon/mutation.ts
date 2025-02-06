@@ -5,8 +5,8 @@ export const createCoupon = async (couponData: any) => {
     try {
         const { data } = await axiosInstance.post(`/coupon`, couponData);
         return { data };
-    } catch (error) {
-        throw error;
+    } catch (error: any) {
+        throw error.response.data;
     }
 };
 

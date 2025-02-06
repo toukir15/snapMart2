@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
 export const Toast = (status: string, message: string) => {
-    if (status == "success") {
+    if (status === "success") {
         toast.success(message, {
             duration: 2000,
             style: {
@@ -9,5 +9,13 @@ export const Toast = (status: string, message: string) => {
                 color: "#58B577",
             },
         });
+    } else if (status === "error") {
+        toast.error(message, {
+            duration: 2000,
+            style: {
+                background: "#FDEDED",
+                color: "#D14343",
+            },
+        });
     }
-}
+};

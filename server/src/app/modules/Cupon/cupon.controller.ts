@@ -38,7 +38,7 @@ const createCupon = catchAsync(async (req: Request, res: Response) => {
 });
 
 const editCoupon = catchAsync(async (req: Request, res: Response) => {
-  const result = await CuponServices.editCoupon(req.params.couponId, req.body.data);
+  const result = await CuponServices.editCoupon(req.params.couponId, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -2,7 +2,7 @@ import { Request, RequestHandler, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from "http-status";
-import { userService } from "./user.sevice";
+import { userService } from "./user.service";
 
 const getUsers = catchAsync(async (req: Request, res: Response) => {
   const result = await userService.getUsers();
@@ -10,6 +10,33 @@ const getUsers = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "Retrive users successfuly!",
+    data: result,
+  });
+});
+const getAdmins = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.getAdmins();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Retrive admins successfuly!",
+    data: result,
+  });
+});
+const getVendors = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.getVendors();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Retrive vendors successfuly!",
+    data: result,
+  });
+});
+const getCustomers = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.getCustomers();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Retrive customers successfuly!",
     data: result,
   });
 });
@@ -63,4 +90,7 @@ export const userController = {
   createCustomer,
   getUsers,
   updateStatus,
+  getAdmins,
+  getVendors,
+  getCustomers
 };
