@@ -4,7 +4,7 @@ import { Layout, Menu } from "antd";
 import { useContext, useState } from "react";
 import Link from "next/link";
 import { Logo, SearchIcon } from "@/src/components/icons";
-import { AdminSidebarRoutes, VendorSidebarRoutes } from "@/src/const";
+import { VendorSidebarRoutes } from "@/src/const";
 import { Input } from "@nextui-org/input";
 import { IProductProviderValues, ProductContext } from "@/src/context/product.provider";
 import profileImg from "../../../../../../public/profile.jpeg"

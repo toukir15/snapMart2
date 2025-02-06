@@ -4,6 +4,7 @@ import { Select } from "antd";
 import { FieldValues, useForm, Controller } from "react-hook-form";
 import FormInput from "../../shared/form/FormInput";
 import { AiOutlineStar, AiFillStar } from 'react-icons/ai';
+import { IoMdClose } from 'react-icons/io'
 
 export default function CreateProductForm({ brandsData }: { brandsData: TBrand[] }) {
     const {
@@ -18,6 +19,8 @@ export default function CreateProductForm({ brandsData }: { brandsData: TBrand[]
     const [imagePreviews, setImagePreviews] = useState([]);
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
+    const [imageError, setImageError] = useState(false);
+    const [ratingError, setRatingError] = useState(false);
 
     const handleImageChange = (e: any) => {
         const files = Array.from(e.target.files);
@@ -31,11 +34,25 @@ export default function CreateProductForm({ brandsData }: { brandsData: TBrand[]
 
     const handleRatingClick = (value: number) => {
         setRating(value);
-        setValue("rating", value); // React Hook Form-এ সেট করা
+        setValue("rating", value);
     };
 
     const onSubmit = (data: FieldValues) => {
-        console.log("Form Data:", data);
+        if (imagePreviews.length === 0) {
+            setImageError(true);
+        } else {
+            setImageError(false);
+        }
+
+        if (rating < 1) {
+            setRatingError(true);
+        } else {
+            setRatingError(false);
+        }
+
+        if (!imageError && !ratingError) {
+            console.log("Form Data:", data);
+        }
     };
 
     return (
@@ -78,6 +95,9 @@ export default function CreateProductForm({ brandsData }: { brandsData: TBrand[]
                                         </button>
                                     ))}
                                 </div>
+                                {ratingError && (
+                                    <p className="text-sm text-red-500 mt-1">Rating is required</p>
+                                )}
                             </div>
                         </div>
                         <div className="flex gap-6">
@@ -147,6 +167,28 @@ export default function CreateProductForm({ brandsData }: { brandsData: TBrand[]
                                 onChange={handleImageChange}
                                 className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                             />
+
+                            {imageError && (
+                                <p className="text-sm text-red-500 mt-1">Image is required</p>
+                            )}
+
+                            {/* Image Previews */}
+                            {imagePreviews.length > 0 && (
+                                <div className="mt-4 flex flex-wrap gap-4">
+                                    {imagePreviews.map((preview, index) => (
+                                        <div key={index} className="relative">
+                                            <img src={preview} alt={`Preview ${index}`} className="w-24 h-24 object-cover rounded-md border" />
+                                            <button
+                                                type="button"
+                                                className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs"
+                                                onClick={() => removeImage(index)}
+                                            >
+                                                <IoMdClose />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         <button type="submit" className="mt-4 font-medium transition duration-250 bg-orange-500 text-white px-12 py-3 rounded-md hover:bg-[#ff8133]">Create Product</button>
                     </div>

@@ -144,6 +144,12 @@ export const VendorSidebarRoutes = [
     link: "/dashboard/vendor",
   },
   {
+    label: "Create Shop",
+    key: "5",
+    icon: <IoCreateOutline size={20} />,
+    link: "/dashboard/vendor/create-shop",
+  },
+  {
     label: "Product",
     key: "2",
     icon: <AiFillProduct size={22} />,
