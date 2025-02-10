@@ -59,6 +59,7 @@ const editCategory = async (categoryId: string, req: Request) => {
 };
 
 const deleteCategory = async (categoryId: string) => {
+  console.log(categoryId)
   const result = await prisma.category.delete({
     where: {
       id: categoryId,

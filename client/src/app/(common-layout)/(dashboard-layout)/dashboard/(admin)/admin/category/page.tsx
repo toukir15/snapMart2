@@ -1,9 +1,8 @@
 "use client";
 
 import { CustomTable } from "@/src/components/shared/table/table";
-import { brandColumns, categoriesColumn, shopsColumns } from "@/src/components/shared/table/table.const";
-import { useDeleteBrand, useGetBrands } from "@/src/hooks/brand.hook";
-import { useGetCategories } from "@/src/hooks/category.hook";
+import { categoriesColumn } from "@/src/components/shared/table/table.const";
+import { useDeleteCategory, useGetCategories } from "@/src/hooks/category.hook";
 import { showConfirmation } from "@/src/utils/showConfirmation";
 import { Toast } from "@/src/utils/toast";
 import Link from "next/link";
@@ -12,7 +11,7 @@ import React, { useEffect } from "react";
 
 export default function page() {
     const { data: categoriesData, isLoading: isCategoriesDataLoaing } = useGetCategories()
-    const { mutate: handleDeleteBrand, isSuccess: isDeleteBrandSuccess } = useDeleteBrand()
+    const { mutate: handleDeleteCategory, isSuccess: isDeleteCategorySuccess } = useDeleteCategory()
     const router = useRouter()
 
     const handleEdit = (id: string) => {
@@ -23,7 +22,7 @@ export default function page() {
         showConfirmation(
             "Delete Category",
             "Are you sure you want to delete this category?",
-            () => handleDeleteBrand(id)
+            () => handleDeleteCategory(id)
         );
     };
 
@@ -45,10 +44,10 @@ export default function page() {
     ];
 
     useEffect(() => {
-        if (isDeleteBrandSuccess) {
+        if (isDeleteCategorySuccess) {
             Toast("success", "Deleted category successfully!")
         }
-    }, [isDeleteBrandSuccess]);
+    }, [isDeleteCategorySuccess]);
 
     return (
         <>

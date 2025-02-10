@@ -64,7 +64,37 @@ export default function CreateProductForm({ brandsData }: { brandsData: TBrand[]
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
                     <div className="space-y-8 px-6 pb-6">
-                        <FormInput label="Product Name" id="productName" register={register} errors={errors} validationRules={{ required: "Product name is required" }} placeholder="Enter product name" />
+                        <div className="flex gap-6">
+                            <FormInput label="Product Name" id="productName" register={register} errors={errors} validationRules={{ required: "Product name is required" }} placeholder="Enter product name" />
+                            {/* Brand Dropdown */}
+                            <div className="w-full">
+                                <label htmlFor="brand" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Brand
+                                </label>
+                                <Controller
+                                    name="brand"
+                                    control={control}
+                                    rules={{ required: "Brand is required" }}
+                                    render={({ field }) => (
+                                        <Select
+                                            {...field}
+                                            className="w-full rounded-md border border-gray-300 shadow-sm"
+                                            showSearch
+                                            placeholder="Select a brand"
+                                            filterOption={(input, option) =>
+                                                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                                            }
+                                            options={brandSelect}
+                                            style={{ height: "47px" }}
+                                            onChange={(value) => field.onChange(value)}
+                                        />
+                                    )}
+                                />
+                                {errors.brand && (
+                                    <p className="text-sm text-red-500 mt-1">{errors.brand.message as string}</p>
+                                )}
+                            </div>
+                        </div>
                         <div className="flex gap-6">
                             <FormInput label="Price" id="price" type="number" register={register} errors={errors} validationRules={{ required: "Price is required" }} placeholder="Enter price" />
                             <FormInput label="Color" id="color" register={register} errors={errors} validationRules={{ required: "Color is required" }} placeholder="Enter color" />
@@ -135,6 +165,7 @@ export default function CreateProductForm({ brandsData }: { brandsData: TBrand[]
                             </div>
                             <FormInput label="Model" id="model" register={register} errors={errors} validationRules={{ required: "Model is required" }} placeholder="Enter model" />
                         </div>
+
                         {/* Description Input */}
                         <div>
                             <label htmlFor="description" className="block text-sm font-medium text-gray-600">

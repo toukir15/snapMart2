@@ -3,6 +3,7 @@ import axiosInstance from "@/src/lib/axiosInstance";
 import { cookies } from "next/headers";
 
 export const createShop = async (shopData: any) => {
+    console.log(shopData)
     try {
         const { data } = await axiosInstance.post(`/shop`, shopData);
         if (data.success) {
@@ -11,6 +12,7 @@ export const createShop = async (shopData: any) => {
         }
         return { data: data.data };
     } catch (error: any) {
+        console.log(error)
         throw new Error(error);
     }
 };

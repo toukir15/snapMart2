@@ -3,16 +3,15 @@ import { createShop, editShop, updateStatus } from "../services/shop/mutation";
 import { getShops } from "../services/shop/serverQuery";
 
 export const useCreateShop = () => {
-    // const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
     return useMutation({
         mutationKey: ["SHOP"],
         mutationFn: (payload: any) =>
             createShop(payload),
-        // onSuccess: () => {
-        //     queryClient.invalidateQueries(["CART"]);
-        //     queryClient.invalidateQueries(["CART_COUNT"]);
-
-        // },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["CART"]);
+            queryClient.invalidateQueries(["CART_COUNT"]);
+        },
     });
 };
 export const useUpdateStatus = () => {

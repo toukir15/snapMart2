@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { IoMdClose } from 'react-icons/io'
 import FormInput from "@/src/components/shared/form/FormInput";
+import { useCreateShop } from "@/src/hooks/shop.hook";
 
 export default function CreateProductFormPage() {
     const {
@@ -10,7 +11,7 @@ export default function CreateProductFormPage() {
         handleSubmit,
         formState: { errors },
     } = useForm();
-
+    const { mutate: handleCreateShop } = useCreateShop()
     const [imagePreviews, setImagePreviews] = useState([]);
     const [imageError, setImageError] = useState(false);
 
@@ -39,7 +40,7 @@ export default function CreateProductFormPage() {
             const formData = new FormData()
             formData.append("data", JSON.stringify(shopData))
             formData.append("image", data.image[0])
-            // api call
+            handleCreateShop(formData)
         }
     };
 

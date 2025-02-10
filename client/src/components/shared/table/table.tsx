@@ -5,7 +5,7 @@ interface Action {
     label: string;
     onClick: (id: string, record: any) => void;
     className?: string;
-    disabled?: (record: any) => boolean; // Optional disabled condition for actions
+    disabled?: (record: any) => boolean;
 }
 
 interface CustomTableProps {

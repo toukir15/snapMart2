@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import logo from "../../../public/logo.png";
 import authImg from "../../../public/auth.png"
 import { useUserLogin } from "@/src/hooks/auth.hook";
 import { toast } from "sonner";
@@ -66,6 +64,7 @@ export default function LoginPage() {
                 isInvalid={!!errors.email}
                 errorMessage={errors.email?.message}
               />
+
             </div>
             <div>
               <Input

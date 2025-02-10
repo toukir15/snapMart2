@@ -8,13 +8,10 @@ const CreateBrandPage = () => {
     const {
         register,
         handleSubmit,
-        reset,
         formState: { errors },
     } = useForm();
-    const { mutate, isLoading, isSuccess } = useCreateCoupon()
-    if (isSuccess) {
-        reset()
-    }
+    const { mutate, isLoading } = useCreateCoupon()
+
     const onSubmit = (data: FieldValues) => {
         const formattedData = {
             ...data,

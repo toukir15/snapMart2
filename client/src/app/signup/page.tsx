@@ -1,155 +1,160 @@
 "use client";
-import React, { useState } from "react";
-import Link from "next/link";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
-import { RadioGroup, Radio } from "@nextui-org/radio";
-import logo from "../../../public/logo.png";
-
-import { useRouter } from "next/navigation";
 import { Input } from "@nextui-org/input";
-import { Logo } from "@/src/components/icons";
+import authImg from "../../../public/auth.png";
+import { useUserLogin } from "@/src/hooks/auth.hook";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { FieldValues, useForm } from "react-hook-form";
 
-export default function SignupPage() {
-  const [role, setRole] = useState<"user" | "vendor">("user"); // Role selector state
-  const [files, setFiles] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+export default function LoginPage() {
+  const { mutate: handleLogin, error, isSuccess, isLoading } = useUserLogin();
   const router = useRouter();
 
-  // Handle file changes for image preview
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const imagePreview = reader.result as string;
-        setFiles([file]);
-        setImagePreviews([imagePreview]);
-      };
-      reader.readAsDataURL(file);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FieldValues>();
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Incorrect Credential!", { duration: 2000 });
     }
-  };
+  }, [error]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push("/");
+      toast.success("Login Successfully!", { duration: 2000 });
+    }
+  }, [isSuccess]);
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (role === "vendor") {
-      router.push("/vendor/dashboard"); // Redirect to dashboard for vendors
-    } else {
-      router.push("/user/home"); // Redirect to home for users
-    }
+  const onSubmit = (data: FieldValues) => {
+    console.log(data);
+    handleLogin(data);
   };
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <form onSubmit={handleSubmit}>
-        <div className="xl:bg-[#F7F7F7] w-[400px] xl:w-[600px] shadow-lg py-[30px] rounded-2xl flex justify-center items-center flex-col">
-          <Logo size={48} color={"black"} />
-          <h3 className="text-2xl font-medium mb-8">SnapMart</h3>
-
-          {/* Name Field */}
-          <div className="flex flex-col w-4/5 md:w-3/5 mb-4 xl:mb-6">
-            <Input variant="bordered" label="Name" radius="sm" required />
+    <div className="flex flex-col lg:flex-row h-screen w-full">
+      {/* Left Side */}
+      <div className="flex w-full h-screen lg:w-1/2 items-center justify-center px-8 lg:px-20 py-10 lg:py-0">
+        <div className="w-full max-w-md">
+          <div className="mb-8">
+            <h1 className="text-3xl lg:text-4xl text-gray-900 font-bold">Sign Up</h1>
+            <p className="mt-2 text-gray-600">
+              Don't have an account?{" "}
+              <a href="/signup" className="text-blue-500 hover:underline">
+                Sign up
+              </a>
+            </p>
           </div>
-
-          {/* Email Field */}
-          <div className="flex flex-col w-4/5 md:w-3/5 mb-4 xl:mb-6">
-            <Input
-              variant="bordered"
-              label="Email"
-              type="email"
-              radius="sm"
-              required
-            />
-          </div>
-
-          {/* Profile Photo Field */}
-          <div className="flex items-center mb-6 gap-4 w-4/5 md:w-3/5 ">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
-              <label
-                htmlFor="profilePhoto"
-                className="border w-fit py-2 px-4 rounded-full border-[#FE5417] cursor-pointer text-[#FE5417] text-sm"
-              >
-                Profile photo
-              </label>
-              <input
-                type="file"
-                id="profilePhoto"
-                className="hidden"
-                onChange={handleFileChange}
+              <Input
+                {...register("name", { required: "Name is required" })}
+                type="text"
+                radius="sm"
+                label="Name"
+                size="sm"
+                isInvalid={!!errors.name}
+                errorMessage={errors.name?.message as string}
               />
             </div>
-            {imagePreviews.length > 0 && (
-              <div className="flex flex-wrap gap-3">
-                {imagePreviews.map((src, idx) => (
-                  <div key={idx} className="h-20 w-20 border border-dashed p-2">
-                    <img className="w-full h-full" alt="preview" src={src} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Password Field */}
-          <div className="flex flex-col w-4/5 md:w-3/5 mb-4 xl:mb-6">
-            <Input
-              variant="bordered"
-              label="Password"
-              type="password"
-              radius="sm"
-              required
-            />
-          </div>
-
-          {/* Confirm Password Field */}
-          <div className="flex flex-col w-4/5 md:w-3/5 mb-4 xl:mb-6">
-            <Input
-              variant="bordered"
-              label="Confirm Password"
-              type="password"
-              radius="sm"
-              required
-            />
-          </div>
-
-          {/* Address Field */}
-          <div className="flex flex-col w-4/5 md:w-3/5 mb-4 xl:mb-6">
-            <Input variant="bordered" label="Address" radius="sm" required />
-          </div>
-
-          {/* Role Selector */}
-          <div className="flex flex-col w-4/5 md:w-3/5 mb-4 xl:mb-6 text-sm">
-            {/* <RadioGroup
-              value={role}
-              onValueChange={(value: any) => setRole(value)}
-              label="Register as:"
-              orientation={"horizontal"}
-              color="warning"
+            <div>
+              <Input
+                {...register("email", { required: "Email is required" })}
+                type="email"
+                radius="sm"
+                label="Email"
+                size="sm"
+                isInvalid={!!errors.email}
+                errorMessage={errors.email?.message as string}
+              />
+            </div>
+            {/* Logo Input */}
+            <div>
+              <input
+                type="file"
+                id="logo"
+                accept="image/*"
+                {...register("logo", { required: "Logo is required" })}
+                className={`mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 ${errors.logo ? "border-red-500 focus:ring-red-500" : ""
+                  }`}
+              />
+              {errors.logo && (
+                <p className="text-sm text-red-500 mt-1">{errors.logo?.message as string}</p>
+              )}
+            </div>
+            <div>
+              <Input
+                {...register("password", { required: "Password is required" })}
+                type="password"
+                radius="sm"
+                label="Password"
+                size="sm"
+                isInvalid={!!errors.password}
+                errorMessage={errors.password?.message as string}
+              />
+            </div>
+            <div>
+              <Input
+                {...register("confirmPassword", { required: "Confirm password is required" })}
+                type="password"
+                radius="sm"
+                label="Confirm Password"
+                size="sm"
+                isInvalid={!!errors.confirmPassword}
+                errorMessage={errors.confirmPassword?.message as string}
+              />
+            </div>
+            <div>
+              <Input
+                {...register("address", { required: "Address is required" })}
+                type="text"
+                radius="sm"
+                label="Address"
+                size="sm"
+                isInvalid={!!errors.address}
+                errorMessage={errors.address?.message as string}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <a href="/forgot-password" className="text-sm text-blue-500 hover:underline">
+                Forgot password?
+              </a>
+            </div>
+            <Button
+              type="submit"
+              className="w-full rounded-md bg-[#F85606] py-2 px-4 text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              isDisabled={isLoading}
             >
-              <Radio value="user">User</Radio>
-              <Radio value="vendor">Vendor</Radio>
-            </RadioGroup> */}
-          </div>
-
-          <Button
-            type="submit"
-            size="md"
-            className="w-4/5 md:w-3/5 bg-[#FE5417] px-12 rounded-xl font-bold mt-2"
-          >
-            Sign Up
-          </Button>
-
-          <p className="text-[#b5b4b4] mt-3 md:mt-4">
-            Already have an account?{" "}
-            <Link
-              href={`/login`}
-              className="hover:cursor-pointer hover:underline hover:text-[#959595]"
-            >
-              Login
-            </Link>
-          </p>
+              {isLoading ? "Signing..." : "Sign Up"}
+            </Button>
+          </form>
         </div>
-      </form>
+      </div>
+
+      {/* Right Side */}
+      <div className="hidden lg:flex w-1/2 bg-gradient-to-br from-gray-950 to-blue-950 items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-white text-3xl lg:text-4xl font-bold mb-6">Welcome to SnapMart</h2>
+          <p className="text-gray-300 text-base lg:text-lg mb-8 px-4 lg:px-10">
+            A dashboard for managing portfolio content enables quick updates to
+            projects, blogs, and skills without coding, keeping the portfolio dynamic and up-to-date.
+          </p>
+          <Image
+            src={authImg}
+            alt="Authentication Illustration"
+            width={300}
+            height={300}
+            className="mx-auto"
+          />
+        </div>
+      </div>
     </div>
   );
 }
