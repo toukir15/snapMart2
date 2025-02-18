@@ -62,62 +62,59 @@ const createVendor = async (req: Request) => {
   const hashedPassword: string = await bcrypt.hash(req.body.password, 12);
 
   const userData = {
-    name: req.body.vendor.name,
-    email: req.body.vendor.email,
-    password: hashedPassword,
-    role: UserRole.VENDOR,
-    profilePhoto: file.path
+    name: req.body.name,
+    email: req.body.email,
+    profilePhoto: file?.path
   };
+
+  const ShopData: any = {
+    name: req.body.shopName,
+    description: req.body.description,
+  }
+  const role = req.body.role.toUpperCase();
 
   const result = await prisma.$transaction(async (transactionClient) => {
     await transactionClient.user.create({
+      data: { ...userData, password: hashedPassword, role },
+    });
+
+    const createVendorData = await transactionClient.vendor.create({
       data: userData,
     });
 
-    const vendorData = {
-      ...req.body.vendor,
-      profilePhoto: file.path,
-    };
+    const createShop = await transactionClient.shop.create({
+      data: { ...ShopData, vendorId: createVendorData.id }
+    })
 
-    const createVendorData = await transactionClient.vendor.create({
-      data: vendorData,
-    });
-    return createVendorData;
+    const updateVendor = await transactionClient.vendor.update({
+      where: { id: createVendorData.id },
+      data: { shopId: createShop.id },
+    })
+
+    return updateVendor;
   });
-
   return result;
 };
 
 const createCustomer = async (req: Request) => {
   const file = req.file as IFile;
-
   const hashedPassword: string = await bcrypt.hash(req.body.password, 12);
-
   const userData = {
-    name: req.body.customer.name,
-    email: req.body.customer.email,
-    password: hashedPassword,
-    role: UserRole.CUSTOMER,
-    profilePhoto: file.path
+    name: req.body.name,
+    email: req.body.email,
+    profilePhoto: file?.path
   };
 
   const result = await prisma.$transaction(async (transactionClient) => {
     await transactionClient.user.create({
+      data: { ...userData, role: UserRole.CUSTOMER, password: hashedPassword },
+    });
+    const createCustomerData = await transactionClient.customer.create({
       data: userData,
     });
-
-    const customerData = {
-      ...req.body.customer,
-      profilePhoto: file.path,
-    };
-
-    const createCustomerData = await transactionClient.customer.create({
-      data: customerData,
-    });
-
     return createCustomerData;
   });
-
+  console.log(result)
   return result;
 };
 

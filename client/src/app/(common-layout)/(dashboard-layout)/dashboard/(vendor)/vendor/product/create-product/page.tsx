@@ -2,9 +2,7 @@ import CreateProductForm from "@/src/components/pageComponents/Product/CreatePro
 import { getBrands } from "@/src/services/brand/query";
 
 const CreateProduct = async () => {
-
     const brands = await getBrands()
-
     return (
         <CreateProductForm brandsData={brands.data} />
     );

@@ -15,7 +15,6 @@ router.get("/customer", auth(UserRole.ADMIN), userController.getCustomers);
 
 router.post(
   "/create-admin",
-  // auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
   multerUpload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = userValidation.createAdmin.parse(JSON.parse(req.body.data));
@@ -25,10 +24,9 @@ router.post(
 
 router.post(
   "/create-vendor",
-  // auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
   multerUpload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
-    req.body = userValidation.createVendor.parse(JSON.parse(req.body.data));
+    req.body = JSON.parse(req.body.data);
     return userController.createVendor(req, res, next);
   }
 );
@@ -37,7 +35,7 @@ router.post(
   "/create-customer",
   multerUpload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
-    req.body = userValidation.createCustomer.parse(JSON.parse(req.body.data));
+    req.body = JSON.parse(req.body.data);
     return userController.createCustomer(req, res, next);
   }
 );

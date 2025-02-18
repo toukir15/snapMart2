@@ -143,9 +143,8 @@ const TableWithPaginationAndSearch = () => {
   );
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
-      <div className="mx-auto bg-white rounded-lg shadow-lg p-6">
-        {/* Search Field */}
+    <div className="">
+      {/* <div className="mx-auto bg-white rounded-lg shadow-lg p-6">
         <div className="flex justify-between items-center mb-6">
           <Input
             placeholder="Search by name..."
@@ -158,7 +157,6 @@ const TableWithPaginationAndSearch = () => {
           </Button>
         </div>
 
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200">
             <thead className="bg-blue-50">
@@ -214,17 +212,14 @@ const TableWithPaginationAndSearch = () => {
           </table>
         </div>
 
-        {/* Pagination */}
         {filteredData.length > itemsPerPage && (
           <div className="flex justify-end mt-6 space-x-2">
-            {/* Previous Button */}
             <Button
               onClick={prevPage}
               disabled={currentPage === 1}
               icon={<GrPrevious />}
             />
 
-            {/* Page Numbers */}
             {getPaginationRange().map((pageNumber) => (
               <Button
                 key={pageNumber}
@@ -235,7 +230,6 @@ const TableWithPaginationAndSearch = () => {
               </Button>
             ))}
 
-            {/* Next Button */}
             <Button
               onClick={nextPage}
               disabled={currentPage === totalPages}
@@ -243,7 +237,7 @@ const TableWithPaginationAndSearch = () => {
             />
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

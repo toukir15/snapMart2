@@ -45,8 +45,8 @@ export default function CreateProductFormPage() {
     };
 
     return (
-        <div className="flex justify-center px-8 my-10 bg-gray-100">
-            <div className="bg-white rounded-lg shadow-lg w-full">
+        <div className="flex justify-center">
+            <div className="bg-white rounded-lg w-full">
                 <div className="mb-4 border-b py-4 flex items-center justify-between px-6">
                     <h2 className="text-xl font-semibold text-start">Create Shop</h2>
                 </div>

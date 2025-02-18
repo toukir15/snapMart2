@@ -1,144 +1,65 @@
-"use client";
-import "@/src/styles/globals.css";
-import { Layout, Menu } from "antd";
-import { useContext, useState } from "react";
+"use client"
 import Link from "next/link";
-import { Logo, SearchIcon } from "@/src/components/icons";
-import { VendorSidebarRoutes } from "@/src/const";
-import { Input } from "@nextui-org/input";
-import { IProductProviderValues, ProductContext } from "@/src/context/product.provider";
-import profileImg from "../../../../../../public/profile.jpeg"
-import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { FaChartPie } from "react-icons/fa";
+import { MdManageHistory } from "react-icons/md";
+import { ReactNode } from "react";
+import { RiUserSettingsLine, RiCouponLine } from "react-icons/ri";
+import { BiLayer } from "react-icons/bi";
+import { AiOutlineOrderedList, AiOutlineStar } from "react-icons/ai";
 
-const { Content, Sider } = Layout;
+interface DashboardLayoutProps {
+  children: ReactNode;
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [collapsed, setCollapsed] = useState(false);
-  const { productStates } = useContext(
-    ProductContext
-  ) as IProductProviderValues;
-  const { setSearchTerm, searchTerm } = productStates;
+const VendorSidebarRoutes = [
+  { label: "Dashboard", icon: <FaChartPie size={18} />, link: "/dashboard/vendor" },
+  { label: "Profile", icon: <RiUserSettingsLine size={20} />, link: "/dashboard/vendor/profile" },
+  { label: "Products", icon: <BiLayer size={20} />, link: "/dashboard/vendor/product/all-products" },
+  { label: "Coupons", icon: <RiCouponLine size={20} />, link: "/dashboard/vendor/create-shop" },
+  { label: "Reviews", icon: <AiOutlineStar size={20} />, link: "/dashboard/vendor/review" },
+  { label: "Orders", icon: <AiOutlineOrderedList size={20} />, link: "/dashboard/vendor/order-history" },
+  { label: "Logout", icon: <MdManageHistory size={20} />, link: "/dashboard/vendor/order-history" },
+];
 
-  const handleSearchKeyPress = (e: any) => {
-    if (e.key === "Enter") {
-      setSearchTerm(e.target.value);
-    }
-  };
-
-  const handleClearSearch = () => {
-    setSearchTerm("");
-  };
-
-  const handleSearchOnChange = (e: any) => {
-    if (e.target.value === "") {
-      setSearchTerm("");
-    }
-  };
-
-  const menuItems = VendorSidebarRoutes.map((item) => ({
-    key: item.key,
-    icon: item.icon,
-    label: item.link ? (
-      <Link href={item.link}>{item.label}</Link>
-    ) : (
-      item.label
-    ),
-    children: item.children
-      ? item.children.map((child) => ({
-        key: child.key,
-        icon: child.icon, // Add icon for nested items
-        label: <Link href={child.link}>{child.label}</Link>,
-      }))
-      : undefined,
-  }));
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  const pathname = usePathname(); // Use usePathname instead of useRouter
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      {/* Sidebar for larger screens */}
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={setCollapsed}
-        style={{
-          height: "100vh",
-          position: "fixed",
-          top: 0,
-          left: 0,
-        }}
-      >
+    <div className="relative">
+      {/* Navbar */}
+      <nav className="py-4 border-b fixed top-0 left-0 w-full z-50 bg-white">
+        <h1 className="text-xl font-bold px-8">SnapMart</h1>
+      </nav>
 
-        <Link
-          href={"/"}
-          className="flex  items-center gap-1 px-6 py-4 border-b border-gray-500"
-        >
-          <div className="relative top-1">
-            <Logo color="white" />
-          </div>
-          {/* Conditionally render text based on the collapsed state */}
-          {!collapsed && (
-            <span className="text-xl font-medium relative top-1 text-white">
-              SnapMart
-            </span>
-          )}
-        </Link>
+      <div className="flex min-h-screen bg-gray-50 max-w-[1500px] mx-auto pt-15">
+        {/* Sidebar (Fixed) */}
+        <aside className="w-64 bg-white h-screen fixed top-16">
+          <nav className="flex flex-col gap-1">
+            {VendorSidebarRoutes.map((route) => {
+              const isActive = pathname === route.link;
+              return (
+                <Link href={route.link} key={route.label}>
+                  <div
+                    className={`flex items-center gap-2 py-[13px] px-5 text-sm cursor-pointer transition duration-200
+                      ${isActive
+                        ? "bg-[#F6F7F8] text-[#333438] font-medium"
+                        : "text-[#808390] hover:text-[#333438] hover:bg-[#F6F7F8]"
+                      }
+                    `}
+                  >
+                    {route.icon}
+                    <span>{route.label}</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </nav>
+        </aside>
 
-        {/* Updated Menu with `items` */}
-        <div className="mt-4">
-          <Menu
-            theme="light"
-            defaultSelectedKeys={["1"]}
-            mode="inline"
-            items={menuItems}
-          />
-        </div>
-      </Sider>
-
-      <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
-        <header className="py-[12px] px-14 bg-[#323240] text-gray-200 sticky top-0">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold">Dashboard</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Input
-                onKeyDown={handleSearchKeyPress}
-                defaultValue={searchTerm}
-                onClear={handleClearSearch}
-                onChange={handleSearchOnChange}
-                placeholder="Search..."
-                color="warning"
-                startContent={
-                  <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-                }
-                type="search"
-              />
-              <div className="flex items-center space-x-2">
-                <div className="border-1 border-gray-300 rounded-full p-[2px]">
-                  <Image
-                    src={profileImg}
-                    alt="User Avatar"
-                    height={50}
-                    width={50}
-                    className="rounded-full"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Main content area */}
-        <Content>
-          {/* Main content */}
-          <div className="xl:p-6 min-h-[calc(100vh-70px)] bg-[#EFF3F4] rounded-lg">
-            {children}
-          </div>
-        </Content>
-      </Layout>
-    </Layout>
+        {/* Content Area (Scrollable) */}
+        <main className="flex-1 p-10 pt-24 bg-[#F6F7F8] ml-64">{children}</main>
+      </div>
+    </div>
   );
 }

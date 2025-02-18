@@ -5,17 +5,17 @@ import { jwtDecode } from "jwt-decode";
 // import { FieldValues } from "react-hook-form";
 
 import axiosInstance from "@/src/lib/axiosInstance";
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { FieldValues } from "react-hook-form";
 
-// export const userRegister = async (userData: FieldValues) => {
-//   try {
-//     const { data } = await axiosInstance.post("/auth/register", userData);
-//     return data.data;
-//   } catch (error: any) {
-//     throw new Error(error);
-//   }
-// };
+export const userRegister = async (userData: FieldValues) => {
+    try {
+        const { data } = await axiosInstance.post("/auth/register", userData);
+        return data.data;
+    } catch (error: any) {
+        throw new Error(error);
+    }
+};
 
 export const userLogin = async (userData: any) => {
     try {

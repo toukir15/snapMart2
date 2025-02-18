@@ -1,6 +1,8 @@
 "use client"
 import React from "react";
 import CountUp from "react-countup";
+import { AiOutlineShoppingCart, AiOutlineDollarCircle } from 'react-icons/ai';
+import { BsBox } from 'react-icons/bs';
 import { PieChart, Pie, Tooltip, Cell, BarChart, CartesianGrid, XAxis, YAxis, Legend, Bar } from "recharts";
 
 const App = () => {
@@ -17,58 +19,62 @@ const App = () => {
     { name: "Java", students: 200, projects: 980 },
     { name: "C++", students: 278, projects: 390 },
   ];
-
+  const stats = [
+    {
+      title: 'Total Products',
+      value: 12,
+      icon: <BsBox className="text-blue-500 text-2xl" />,
+      bg: 'bg-green-100'
+    },
+    {
+      title: 'Total Sales',
+      value: 10,
+      icon: <AiOutlineShoppingCart className="text-green-500 text-2xl" />,
+      bg: 'bg-green-100'
+    },
+    {
+      title: 'Total Revenue',
+      value: '$3116',
+      icon: <AiOutlineDollarCircle className="text-purple-500 text-2xl" />,
+      bg: 'bg-purple-100'
+    }
+  ];
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
   return (
-    <div className=" min-h-screen p-6">
+    <div className="  p-6">
       {/* Header */}
 
 
       {/* Summary Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-[#ffeaea] shadow rounded-lg py-8 px-4">
-          <h2 className="text-lg font-semibold">Total Products</h2>
-          <p className="text-4xl font-bold text-[#f76363]">
-            <CountUp end={10042} duration={2} separator="," />
-          </p>
-          <p className="text-gray-500">All running & completed projects</p>
-        </div>
-        <div className="bg-[#e3fff3] shadow rounded-lg py-8 px-4">
-          <h2 className="text-lg font-semibold">Total Orders</h2>
-          <p className="text-4xl font-bold text-green-600">
-            <CountUp end={10042} duration={2} separator="," />
-          </p>
-          <p className="text-gray-500">+12% Completion rate this month</p>
-        </div>
-        <div className="bg-[#ffffd8] shadow rounded-lg py-8 px-4">
-          <h2 className="text-lg font-semibold">Complete Order</h2>
-          <p className="text-4xl font-bold text-[#b4b42b]">
-            <CountUp end={923} duration={2} separator="," />
-          </p>
-          <p className="text-gray-500">+8% Running projects increase</p>
-        </div>
-        <div className="bg-[#f9e3ff] shadow rounded-lg py-8 px-4">
-          <h2 className="text-lg font-semibold">Pending Order</h2>
-          <p className="text-4xl font-bold text-[#da56fe]">
-            <CountUp end={923} duration={2} separator="," />
-          </p>
-          <p className="text-gray-500">+8% Running projects increase</p>
-        </div>
-      </section>
+      <div className="flex justify-between gap-4 mb-4">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className="flex items-center bg-white justify-between rounded-lg border border-gray-200 p-4 shadow-sm w-full"
+          >
+            <div>
+              <h4 className="text-gray-500">{stat.title}</h4>
+              <p className="text-2xl font-bold text-blue-900">{stat.value}</p>
+            </div>
+            <div className={`flex h-12 w-12 items-center justify-center rounded-lg ${stat.bg}`}>
+              {stat.icon}
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Charts Section */}
-      <section className="grid grid-cols-[60%,39%] gap-4 mb-6">
-        {/* Bar Chart Section */}
+      <section className="grid grid-cols-[60%,38%] gap-6 mb-6">
         <div className="bg-white shadow rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Revenue Chart</h2>
-          <div className="h-[400px] rounded-lg flex items-center justify-center">
+          <div className="h-[350px] rounded-lg flex items-center justify-center">
             <BarChart
-              width={850}
+              width={600}
               height={350}
               data={barData}
               margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" />
+              <CartesianGrid strokeDasharray="2 3" />
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
@@ -79,11 +85,10 @@ const App = () => {
           </div>
         </div>
 
-        {/* Pie Chart Section */}
         <div className="bg-white shadow rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">Team Performance</h2>
-          <div className="h-[400px] rounded-lg flex items-center justify-center">
-            <PieChart width={400} height={400}>
+          <div className="h-[300px] max-w-[400px] rounded-lg flex items-center justify-center">
+            <PieChart width={300} height={400}>
               <Pie
                 data={data}
                 dataKey="value"

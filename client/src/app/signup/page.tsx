@@ -1,17 +1,25 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
+import { Input, Textarea } from "@nextui-org/input";
 import authImg from "../../../public/auth.png";
-import { useUserLogin } from "@/src/hooks/auth.hook";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { FieldValues, useForm } from "react-hook-form";
+import { Select, SelectItem } from "@nextui-org/react";
+import { useCreateCustomer, useCreateVendor } from "@/src/hooks/user.hook";
+import { Toast } from "@/src/utils/toast";
+
+export const userRoles = [
+  { key: "vendor", label: "Vendor" },
+  { key: "customer", label: "Customer" },
+];
 
 export default function LoginPage() {
-  const { mutate: handleLogin, error, isSuccess, isLoading } = useUserLogin();
+  const { mutate: handleVendorMutate, isError: isVendorError, isSuccess: isVendorSuccess, isLoading: isVendorLoading } = useCreateVendor();
+  const { mutate: handleCustomerMutate, isError: isCustomerError, isSuccess: isCustomerSuccess, isLoading: isCustomerLoading } = useCreateCustomer();
   const router = useRouter();
+  const [selectedRole, setSelectedRole] = useState<string>("customer");
 
   const {
     register,
@@ -19,23 +27,46 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<FieldValues>();
 
-  useEffect(() => {
-    if (error) {
-      toast.error("Incorrect Credential!", { duration: 2000 });
-    }
-  }, [error]);
+  console.log(errors)
 
   useEffect(() => {
-    if (isSuccess) {
-      router.push("/");
-      toast.success("Login Successfully!", { duration: 2000 });
+    if (isVendorSuccess) {
+      Toast("success", "Vendor register successfully!")
     }
-  }, [isSuccess]);
+    if (isCustomerSuccess) {
+      Toast("success", "Customer register successfully!")
+    }
+  }, [isVendorSuccess, isCustomerSuccess]);
+
+  useEffect(() => {
+    if (isCustomerError || isVendorError) {
+      Toast("error", "Something went wrong!")
+    }
+  }, [isCustomerError, isVendorError]);
 
   // Handle form submission
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
-    handleLogin(data);
+    const SignupData: any = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      role: selectedRole,
+    };
+
+    if (selectedRole === "vendor") {
+      SignupData.shopName = data.shopName;
+      SignupData.description = data.description
+    }
+
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(SignupData));
+    formData.append("file", data.image[0]);
+    if (selectedRole === "vendor") {
+      handleVendorMutate(formData);
+    }
+    if (selectedRole === "customer") {
+      handleCustomerMutate(formData)
+    }
   };
 
   return (
@@ -46,9 +77,9 @@ export default function LoginPage() {
           <div className="mb-8">
             <h1 className="text-3xl lg:text-4xl text-gray-900 font-bold">Sign Up</h1>
             <p className="mt-2 text-gray-600">
-              Don't have an account?{" "}
-              <a href="/signup" className="text-blue-500 hover:underline">
-                Sign up
+              Already have an account?{" "}
+              <a href="/login" className="text-blue-500 hover:underline">
+                Login
               </a>
             </p>
           </div>
@@ -79,16 +110,57 @@ export default function LoginPage() {
             <div>
               <input
                 type="file"
-                id="logo"
+                id="image"
                 accept="image/*"
-                {...register("logo", { required: "Logo is required" })}
+                {...register("image")}
                 className={`mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 ${errors.logo ? "border-red-500 focus:ring-red-500" : ""
                   }`}
               />
-              {errors.logo && (
-                <p className="text-sm text-red-500 mt-1">{errors.logo?.message as string}</p>
-              )}
             </div>
+            {/* Role Selection */}
+            <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+              <Select
+                label="Register as a"
+                value={selectedRole}
+                onChange={(e) => setSelectedRole(e.target.value)}
+              >
+                {userRoles.map((role) => (
+                  <SelectItem key={role.key} value={role.key}>
+                    {role.label}
+                  </SelectItem>
+                ))}
+              </Select>
+            </div>
+
+            {/* Vendor হলে Shop Name দেখানো হবে */}
+            {selectedRole === "vendor" && (
+              <div>
+                <Input
+                  {...register("shopName", { required: "Shop Name is required" })}
+                  type="text"
+                  radius="sm"
+                  label="Shop Name"
+                  size="sm"
+                  isInvalid={!!errors.shopName}
+                  errorMessage={errors.shopName?.message as string}
+                />
+              </div>
+            )}
+
+            {selectedRole === "vendor" && (
+              <div>
+                <Textarea
+                  {...register("description", { required: "Description is required" })}
+                  type="text"
+                  radius="sm"
+                  label="Description"
+                  size="sm"
+                  isInvalid={!!errors.shopName}
+                  errorMessage={errors.shopName?.message as string}
+                />
+              </div>
+            )}
+
             <div>
               <Input
                 {...register("password", { required: "Password is required" })}
@@ -100,28 +172,6 @@ export default function LoginPage() {
                 errorMessage={errors.password?.message as string}
               />
             </div>
-            <div>
-              <Input
-                {...register("confirmPassword", { required: "Confirm password is required" })}
-                type="password"
-                radius="sm"
-                label="Confirm Password"
-                size="sm"
-                isInvalid={!!errors.confirmPassword}
-                errorMessage={errors.confirmPassword?.message as string}
-              />
-            </div>
-            <div>
-              <Input
-                {...register("address", { required: "Address is required" })}
-                type="text"
-                radius="sm"
-                label="Address"
-                size="sm"
-                isInvalid={!!errors.address}
-                errorMessage={errors.address?.message as string}
-              />
-            </div>
             <div className="flex items-center justify-between">
               <a href="/forgot-password" className="text-sm text-blue-500 hover:underline">
                 Forgot password?
@@ -130,9 +180,9 @@ export default function LoginPage() {
             <Button
               type="submit"
               className="w-full rounded-md bg-[#F85606] py-2 px-4 text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              isDisabled={isLoading}
+              isDisabled={isVendorLoading || isCustomerLoading}
             >
-              {isLoading ? "Signing..." : "Sign Up"}
+              {(isVendorLoading || isCustomerLoading) ? "Signing..." : "Sign Up"}
             </Button>
           </form>
         </div>

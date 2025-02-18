@@ -8,6 +8,7 @@ import { useUserLogin } from "@/src/hooks/auth.hook";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { FieldValues, useForm } from "react-hook-form";
+import { Toast } from "@/src/utils/toast";
 
 export default function LoginPage() {
   const { mutate: handleLogin, error, isSuccess, isLoading } = useUserLogin();
@@ -21,14 +22,14 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (error) {
-      toast.error("Incorrect Credential!", { duration: 2000 });
+      Toast("error", "Incorrect Credential!")
     }
   }, [error]);
 
   useEffect(() => {
     if (isSuccess) {
       router.push("/");
-      toast.success("Login Successfully!", { duration: 2000 });
+      Toast("success", "Login Successfully!")
     }
   }, [isSuccess]);
 

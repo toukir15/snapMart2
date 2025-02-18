@@ -53,6 +53,7 @@ export default function CreateProductForm({ brandsData }: { brandsData: TBrand[]
         if (!imageError && !ratingError) {
             console.log("Form Data:", data);
         }
+        console.log(data)
     };
 
     return (
