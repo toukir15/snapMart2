@@ -27,6 +27,10 @@ const ProductManagement = () => {
         { header: "Discount", key: "discount" as const },
     ];
 
+    const onCreate = () => {
+        console.log("create")
+    }
+
     const actions = [
         {
             label: "Delete",
@@ -45,7 +49,7 @@ const ProductManagement = () => {
         },
     ];
 
-    return <ReusableTable title="Products" data={products} columns={columns} actions={actions} />;
+    return <ReusableTable title="Products" data={products} columns={columns} actions={actions} onCreate={onCreate} />;
 };
 
 export default ProductManagement;

@@ -41,7 +41,7 @@ const App = () => {
   ];
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
   return (
-    <div className="  p-6">
+    <div className=" ">
       {/* Header */}
 
 
