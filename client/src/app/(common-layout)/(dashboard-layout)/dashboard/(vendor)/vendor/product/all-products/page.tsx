@@ -1,51 +1,105 @@
-"use client"
-import React from "react";
-import {
-  Trash2,
-  Copy,
-  Edit,
-} from "lucide-react";
+"use client";
+import React, { useEffect, useState } from "react";
+import { Trash2, Copy, Edit } from "lucide-react";
 import ReusableTable from "@/src/components/shared/table/CustomTable";
+import { useDeleteCategory, useGetCategories } from "@/src/hooks/category.hook";
+import { formatDate } from "@/src/utils/formatDate";
+import UpdateCategoryForm from "@/src/components/pageComponents/Category/UpdateCategoryForm";
+import { Toast } from "@/src/utils/toast";
+import CreateProductForm from "@/src/components/pageComponents/Product/CreateProductForm";
+import { useGetProducts } from "@/src/hooks/product.hook";
+export type TCategory = {
+  id: string;
+  name: string;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+};
 
 const ProductManagement = () => {
-  const products = [
-    { id: 1, name: 'Wireless Bluetooth', category: 'Table', price: 122, shop: 'Moinul\'s Tech', discount: 10, image: 'https://th.bing.com/th/id/OIP.EA3HcfZCBdicCPUBOCq_NQHaJ3?rs=1&pid=ImgDetMain' },
-    { id: 2, name: 'Gaming Laptop', category: 'Cabinet', price: 123, shop: 'Moinul\'s Tech', discount: 10, image: 'https://th.bing.com/th/id/OIP.EA3HcfZCBdicCPUBOCq_NQHaJ3?rs=1&pid=ImgDetMain' },
-    { id: 3, name: 'Wireless Bluetooth', category: 'Table', price: 122, shop: 'Moinul\'s Tech', discount: 10, image: 'https://th.bing.com/th/id/OIP.EA3HcfZCBdicCPUBOCq_NQHaJ3?rs=1&pid=ImgDetMain' },
-    { id: 4, name: 'Gaming Laptop', category: 'Cabinet', price: 123, shop: 'Moinul\'s Tech', discount: 10, image: 'https://th.bing.com/th/id/OIP.EA3HcfZCBdicCPUBOCq_NQHaJ3?rs=1&pid=ImgDetMain' },
-    { id: 5, name: 'Wireless Bluetooth', category: 'Table', price: 122, shop: 'Moinul\'s Tech', discount: 10, image: 'https://th.bing.com/th/id/OIP.EA3HcfZCBdicCPUBOCq_NQHaJ3?rs=1&pid=ImgDetMain' },
-    { id: 6, name: 'Gaming Laptop', category: 'Cabinet', price: 123, shop: 'Moinul\'s Tech', discount: 10, image: 'https://th.bing.com/th/id/OIP.EA3HcfZCBdicCPUBOCq_NQHaJ3?rs=1&pid=ImgDetMain' },
-    { id: 7, name: 'Wireless Bluetooth', category: 'Table', price: 122, shop: 'Moinul\'s Tech', discount: 10, image: 'https://th.bing.com/th/id/OIP.EA3HcfZCBdicCPUBOCq_NQHaJ3?rs=1&pid=ImgDetMain' },
-    { id: 8, name: 'Gaming Laptop', category: 'Cabinet', price: 123, shop: 'Moinul\'s Tech', discount: 10, image: 'https://th.bing.com/th/id/OIP.EA3HcfZCBdicCPUBOCq_NQHaJ3?rs=1&pid=ImgDetMain' },
-  ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(null);
+  const { data: categoriesData } = useGetCategories()
+  const { data: productsData } = useGetProducts({})
+  const { mutate, isSuccess: isDeleteSuccess } = useDeleteCategory()
+  const modifyCategoryData = categoriesData?.data.data.map((category: TCategory) => {
+    const formatCreatedAt = formatDate(category.createdAt)
+    const formatUpdatedAt = formatDate(category.updatedAt)
+    return {
+      id: category.id,
+      name: category.name,
+      createdAt: formatCreatedAt,
+      updatedAt: formatUpdatedAt,
+      image: category.image
+    }
+  })
+
 
   const columns = [
     { header: "Image", key: "image" as const },
-    { header: "Product", key: "name" as const },
-    { header: "Price", key: "price" as const },
-    { header: "Shop Name", key: "shop" as const },
-    { header: "Discount", key: "discount" as const },
+    { header: "Category Name", key: "name" as const },
+    { header: "Created At", key: "createdAt" as const },
+    { header: "Updated At", key: "updatedAt" as const },
   ];
+
+  const onCreate = () => {
+    setIsModalOpen(true)
+  };
+
+  const handleEdit = (item: TCategory) => {
+    setSelectedCategory(item);
+    setIsEditModalOpen(true);
+  };
+
+  const handleDelete = (item: TCategory) => {
+    mutate(item.id)
+  }
 
   const actions = [
     {
       label: "Delete",
       icon: <Trash2 size={16} className="mr-2" />,
-      onClick: (item) => console.log("Delete", item.id),
+      onClick: handleDelete,
     },
     {
       label: "Duplicate",
       icon: <Copy size={16} className="mr-2" />,
-      onClick: (item) => console.log("Duplicate", item.id),
+      onClick: (item: any) => console.log("Duplicate", item.id),
     },
     {
       label: "Edit",
       icon: <Edit size={16} className="mr-2" />,
-      onClick: (item) => console.log("Edit", item.id),
+      onClick: handleEdit,
     },
   ];
 
-  return <ReusableTable title="Products" data={products} columns={columns} actions={actions} />;
+  useEffect(() => {
+    if (isDeleteSuccess) {
+      Toast("success", "Delete category successfully!")
+    }
+  }, [isDeleteSuccess])
+
+  return (
+    <div>
+      <ReusableTable title="Categories" data={modifyCategoryData} columns={columns} actions={actions} onCreate={onCreate} />
+
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg w-[750px]">
+            <CreateProductForm setIsModalOpen={setIsModalOpen} />
+          </div>
+        </div>
+      )}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg w-[800px]">
+            <UpdateCategoryForm setIsModalOpen={setIsEditModalOpen} selectedCategory={selectedCategory} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default ProductManagement;

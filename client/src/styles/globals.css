@@ -65,13 +65,13 @@
   background-color: #272731 !important;
 }
 
-.ant-select-outlined:focus,
+/* .ant-select-outlined:focus,
 .ant-select-outlined:active,
 .ant-select-focused .ant-select-selector {
   outline-color: #F97316 !important;
   border-color: #F97316 !important; 
   box-shadow: 0 0 0 0px rgb(255, 255, 255) !important; 
-}
+} */
 
 /* .ant-menu-item-selected a,
 .ant-menu-submenu-selected a {

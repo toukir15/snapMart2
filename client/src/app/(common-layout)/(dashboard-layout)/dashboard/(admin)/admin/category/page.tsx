@@ -1,68 +1,98 @@
 "use client";
-
-import { CustomTable } from "@/src/components/shared/table/table";
-import { categoriesColumn } from "@/src/components/shared/table/table.const";
+import React, { useEffect, useState } from "react";
+import { Trash2, Copy, Edit } from "lucide-react";
+import ReusableTable from "@/src/components/shared/table/CustomTable";
+import CreateCategoryForm from "@/src/components/pageComponents/Category/CreateCategoryForm";
 import { useDeleteCategory, useGetCategories } from "@/src/hooks/category.hook";
-import { showConfirmation } from "@/src/utils/showConfirmation";
+import { formatDate } from "@/src/utils/formatDate";
+import UpdateCategoryForm from "@/src/components/pageComponents/Category/UpdateCategoryForm";
 import { Toast } from "@/src/utils/toast";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+export type TCategory = {
+    id: string;
+    name: string;
+    image: string;
+    createdAt: string;
+    updatedAt: string;
+};
 
-export default function page() {
-    const { data: categoriesData, isLoading: isCategoriesDataLoaing } = useGetCategories()
-    const { mutate: handleDeleteCategory, isSuccess: isDeleteCategorySuccess } = useDeleteCategory()
-    const router = useRouter()
+const ProductManagement = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState<TCategory | null>(null);
+    const { data: categoriesData } = useGetCategories()
+    const { mutate, isSuccess: isDeleteSuccess } = useDeleteCategory()
+    const modifyCategoryData = categoriesData?.data.data.map((category: TCategory) => {
+        const formatCreatedAt = formatDate(category.createdAt)
+        const formatUpdatedAt = formatDate(category.updatedAt)
+        return {
+            id: category.id,
+            name: category.name,
+            createdAt: formatCreatedAt,
+            updatedAt: formatUpdatedAt,
+            image: category.image
+        }
+    })
 
-    const handleEdit = (id: string) => {
-        router.push(`/dashboard/admin/category/update-category/${id}`)
+
+    const columns = [
+        { header: "Image", key: "image" as const },
+        { header: "Category Name", key: "name" as const },
+        { header: "Created At", key: "createdAt" as const },
+        { header: "Updated At", key: "updatedAt" as const },
+    ];
+
+    const onCreate = () => {
+        setIsModalOpen(true)
     };
 
-    const handleDelete = (id: string) => {
-        showConfirmation(
-            "Delete Category",
-            "Are you sure you want to delete this category?",
-            () => handleDeleteCategory(id)
-        );
+    const handleEdit = (item: TCategory) => {
+        setSelectedCategory(item);
+        setIsEditModalOpen(true);
     };
+
+    const handleDelete = (item: TCategory) => {
+        mutate(item.id)
+    }
 
     const actions = [
         {
-            label: "Edit",
-            onClick: handleEdit,
-            className:
-                "bg-green-500 hover:bg-green-600 transition duration-150 py-1 px-3 rounded text-white",
-            disabled: (record: any) => record.isActive === false,
+            label: "Delete",
+            icon: <Trash2 size={16} className="mr-2" />,
+            onClick: handleDelete,
         },
         {
-            label: "Delete",
-            onClick: handleDelete,
-            className:
-                "bg-red-500 hover:bg-red-600 transition duration-150 py-1 px-3 rounded text-white",
-            disabled: (record: any) => record.isActive === true,
+            label: "Edit",
+            icon: <Edit size={16} className="mr-2" />,
+            onClick: handleEdit,
         },
     ];
 
     useEffect(() => {
-        if (isDeleteCategorySuccess) {
-            Toast("success", "Deleted category successfully!")
+        if (isDeleteSuccess) {
+            Toast("success", "Delete category successfully!")
         }
-    }, [isDeleteCategorySuccess]);
+    }, [isDeleteSuccess])
 
     return (
-        <>
-            <div className="xl:px-4 lg:px-32 mt-8 lg:mt-20 rounded-lg bg-white">
-                <div className="py-6 flex justify-end">
-                    <Link href={"/dashboard/admin/category/create-category"} className="w-fit py-2 px-4 font-medium bg-orange-500 text-white rounded-md shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Create Category</Link>
+        <div>
+            <ReusableTable title="Categories" data={modifyCategoryData} columns={columns} actions={actions} onCreate={onCreate} />
+
+            {isModalOpen && (
+                <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-lg shadow-lg w-[800px]">
+                        <CreateCategoryForm setIsModalOpen={setIsModalOpen} />
+                    </div>
                 </div>
-                <CustomTable
-                    columns={categoriesColumn}
-                    data={categoriesData?.data?.data || []}
-                    loading={isCategoriesDataLoaing}
-                    actions={actions}
-                    pageSize={12}
-                />
-            </div>
-        </>
+            )}
+            {isEditModalOpen && (
+                <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-lg shadow-lg w-[800px]">
+                        <UpdateCategoryForm setIsModalOpen={setIsEditModalOpen} selectedCategory={selectedCategory} />
+                    </div>
+                </div>
+            )}
+        </div>
     );
-}
+};
+
+export default ProductManagement;

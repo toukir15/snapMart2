@@ -147,24 +147,17 @@ model Review {
 }
 
 model Product {
-  id             String     @id @unique @default(uuid())
-  shopId         String
-  name           String     @unique
-  price          Int
-  isFlashSale    Boolean    @default(false)
-  categoryId     String
-  description    String
-  color          String
-  styleCode      String
-  department     Department
-  brand          String
-  model          String
-  rating         Int
-  inventoryCount Int
-  discount       Int
-  images         String[]
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  id          String   @id @unique @default(uuid())
+  shopId      String
+  name        String   @unique
+  price       Int
+  discount    Int
+  quantity    Int
+  categoryId  String
+  description String
+  images      String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   category  Category   @relation(fields: [categoryId], references: [id])
   shop      Shop?      @relation(fields: [shopId], references: [id])

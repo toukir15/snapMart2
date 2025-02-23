@@ -1,55 +1,60 @@
 "use client";
-
-import { useEditCategory, useGetCategory } from "@/src/hooks/category.hook";
+import { useEditCategory } from "@/src/hooks/category.hook";
+import { ICategory } from "@/src/types/category";
 import { Toast } from "@/src/utils/toast";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import { FolderOpenDot } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { AiOutlineDelete } from "react-icons/ai";
 
-const UpdateCategoryForm = ({ id }: { id: string }) => {
+const UpdateCategoryForm = ({ setIsModalOpen, selectedCategory }: { setIsModalOpen: any, selectedCategory: ICategory | null }) => {
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const {
         register,
         handleSubmit,
         reset,
         formState: { errors },
     } = useForm();
-    const { data } = useGetCategory(id);
-    console.log(data)
-    const categoryData = data?.data.data
     const { mutate: handleEditCategory, isLoading, isSuccess } = useEditCategory()
-    const router = useRouter()
+
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedImage(file);
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setSelectedImage(null);
+    };
+
 
     const onSubmit = async (data: FieldValues) => {
         const formData = new FormData();
         formData.append("data", JSON.stringify({ name: data.name }));
-        formData.append("file", data.image[0]);
-        // console.log(data)
-        // console.log(data.image[0])
-        handleEditCategory({ id, data: formData })
+        if (selectedImage) {
+            formData.append("file", selectedImage);
+        }
+
+        handleEditCategory({ id: selectedCategory?.id, data: formData })
     };
 
     useEffect(() => {
         if (isSuccess) {
             Toast("success", "Edited category successfully!")
-            router.push("/dashboard/admin/category")
+            setIsModalOpen(false)
             reset();
         }
     }, [isSuccess])
 
     return (
-        <div className="flex justify-center px-8 mt-10 bg-gray-100">
+        <div className="flex justify-center ">
             <div className="bg-white rounded-lg shadow-lg w-full">
                 <div className=" mb-4 border-b py-4 flex items-center justify-between px-6">
-                    <h2 className=" text-xl font-semibold text-start">Edit Category</h2>
-                    <Link href={"/dashboard/admin/category"} className="w-fit py-2 px-4 font-medium bg-orange-500 text-white rounded-md shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
-                        Manage Categories
-                    </Link>
+                    <h2 className=" text-lg font-semibold text-start">Edit Category</h2>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
                     <div className="space-y-4 px-6 pb-6">
-                        {/* Brand Name Input */}
                         <div>
                             <label
                                 htmlFor="brandName"
@@ -63,7 +68,7 @@ const UpdateCategoryForm = ({ id }: { id: string }) => {
                                 {...register("name", {
                                     required: "Category name is required",
                                 })}
-                                defaultValue={categoryData?.name}
+                                defaultValue={selectedCategory?.name}
                                 placeholder="Enter brand name"
                                 className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${errors.brandName
                                     ? "border-red-500 focus:ring-red-500"
@@ -77,40 +82,52 @@ const UpdateCategoryForm = ({ id }: { id: string }) => {
                             )}
                         </div>
 
-                        {/* Logo Input */}
                         <div>
-                            <label
-                                htmlFor="logo"
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Image
-                            </label>
-                            <input
-                                type="file"
-                                id="image"
-                                accept="image/*"
-                                {...register("image")}
-                                className={`mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 ${errors.logo
-                                    ? "border-red-500 focus:ring-red-500"
-                                    : ""
-                                    }`}
-                            />
-                            {errors.image && (
-                                <p className="text-sm text-red-500 mt-1">
-                                    {errors.image?.message as string}
-                                </p>
-                            )}
-                        </div>
-                    </div>
+                            <label className="block text-sm font-medium mb-2 ">Upload Profile</label>
+                            <div className="border-dashed border  border-gray-300 rounded p-4 text-center  relative cursor-pointer">
+                                <input
+                                    type="file"
+                                    accept="image/png, image/jpeg"
+                                    onChange={handleImageChange}
+                                    className="absolute  inset-0 opacity-0 cursor-pointer"
+                                    required
+                                />
 
+                                <div className="flex gap-4 items-center h-full">
+                                    <div className='bg-[#F6F7F8] p-4 rounded-full text-gray-400'>
+                                        <FolderOpenDot size={22} />
+                                    </div>
+                                    <div className='text-start'>
+                                        <p className='text-[#808390] font-medium'>Upload your files</p>
+                                        <p className='text-[#BABFC4] text-sm'>Click to browse JPG or PNG formats.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Selected File Details */}
+                        {selectedImage && (
+                            <div className="flex items-center justify-between bg-gray-100 border rounded-lg px-4 py-2 ">
+                                <div>
+                                    <p className="text-gray-700">{selectedImage.name.length > 15 ? `${selectedImage.name.slice(0, 15)}...` : selectedImage.name}</p>
+                                    <p className="text-xs text-gray-500">{(selectedImage.size / 1024).toFixed(2)} MB</p>
+                                </div>
+                                <button onClick={handleRemoveImage}>
+                                    <AiOutlineDelete className="w-5 h-5 text-gray-500 hover:text-red-500" />
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     {/* Submit Button */}
-                    <div className="border-t py-4 px-6">
+                    <div className="py-4 border-t flex gap-2 px-6 text-sm">
+                        <button onClick={() => setIsModalOpen(false)} className="w-fit py-2 px-4 font-medium bg-[#E2E8F0] text-[#4e5b6f] rounded-md shadow-sm hover:bg-[#e8edf3] focus:outline-none  transition duration-200">
+                            Cancel
+                        </button>
                         <button
-                            disabled={isLoading}
                             type="submit"
-                            className="w-fit py-2 px-4 font-medium bg-orange-500 text-white rounded-md shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                            disabled={isLoading}
+                            className="w-fit py-2 px-4 font-medium bg-red-500 text-white rounded-md shadow-sm hover:bg-red-600 focus:outline-none  transition duration-200"
                         >
-                            {isLoading ? "Saving..." : "Save Changes"}
+                            {isLoading ? "Edating..." : "Continue"}
                         </button>
                     </div>
                 </form>

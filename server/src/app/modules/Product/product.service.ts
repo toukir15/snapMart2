@@ -58,15 +58,6 @@ const getProducts = async (params: any, options: any) => {
     });
   }
 
-  // Filter by category
-  if (params.brand) {
-    andCondition.push({
-      brand: {
-        equals: params.brand,
-        mode: "insensitive",
-      },
-    });
-  }
 
   const whereConditions: Prisma.ProductWhereInput = { AND: andCondition };
   const result = await prisma.product.findMany({
@@ -160,15 +151,6 @@ const getVendorProducts = async (params: any, options: any, email: string) => {
     });
   }
 
-  // Filter by category
-  if (params.brand) {
-    andCondition.push({
-      brand: {
-        equals: params.brand,
-        mode: "insensitive",
-      },
-    });
-  }
 
   const whereConditions: Prisma.ProductWhereInput = { AND: andCondition };
   const result = await prisma.product.findMany({
@@ -202,9 +184,9 @@ const getVendorProducts = async (params: any, options: any, email: string) => {
 
 const getFlashSaleProducts = async (params: any, options: any) => {
   const andCondition: Prisma.ProductWhereInput[] = [
-    {
-      isFlashSale: true,
-    },
+    // {
+    //   isFlashSale: true,
+    // },
   ];
 
   const { page, limit, skip, sortBy, sortOrder } =
@@ -294,7 +276,6 @@ const getSuggestedProducts = async (productId: string) => {
       id: {
         not: productId,
       },
-      brand: findProduct.brand,
       price: {
         gte: findProduct.price - 200,
         lte: findProduct.price + 200,
@@ -314,20 +295,7 @@ const getSuggestedProducts = async (productId: string) => {
   return result;
 };
 
-const getBrands = async () => {
-  // Fetch all unique brand names from the product table
-  const result = await prisma.product.findMany({
-    distinct: ["brand"], // Ensures only unique brand names are fetched
-    select: {
-      brand: true, // Select only the brand field
-    },
-  });
 
-  // Extract the brand names from the result
-  const brands = result.map((product) => product.brand);
-
-  return brands;
-};
 
 const getProduct = async (id: string) => {
   const result = await prisma.product.findUnique({
@@ -346,6 +314,8 @@ const getProduct = async (id: string) => {
 
 const createProduct = async (req: CustomRequest) => {
   const files = req.files as IFile[];
+
+  console.log(req.body, files)
   const productImages = files.map((file) => file.path);
   const findVendor = await prisma.vendor.findFirst({
     where: {
@@ -353,11 +323,7 @@ const createProduct = async (req: CustomRequest) => {
     },
   });
 
-  const findShop = await prisma.shop.findFirstOrThrow({
-    where: {
-      id: findVendor?.shopId
-    }
-  })
+
   if (!findVendor || !findVendor.shopId) {
     throw new Error("Vendor does not exist or does not have a shop.");
   }
@@ -377,21 +343,14 @@ const createProduct = async (req: CustomRequest) => {
   const productData: Prisma.ProductCreateInput = {
     name: req.body.name,
     category: {
-      connect: { id: req.body.category },
+      connect: { id: req.body.categoryId },
     },
     shop: {
       connect: { id: findVendor.shopId },
     },
     price: Number(req.body.price),
-    brand: findShop.name,
-    rating: Number(req.body.rating),
-    model: req.body.model,
-    department: req.body.department,
-    styleCode: req.body.styleCode,
-    color: req.body.color,
-    inventoryCount: Number(req.body.inventoryCount),
+    quantity: Number(req.body.quantity),
     discount: Number(req.body.discount),
-    isFlashSale: req.body.flashSale, // Ensure boolean
     description: req.body.description,
     images: productImages,
   };
@@ -464,6 +423,5 @@ export const ProductService = {
   getFlashSaleProducts,
   getProduct,
   getSuggestedProducts,
-  getBrands,
   editProduct
 };

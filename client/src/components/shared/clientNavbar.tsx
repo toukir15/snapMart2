@@ -6,7 +6,7 @@ import { getCurrentUser } from "@/src/services/auth";
 const ClientNavbar = async () => {
     const user = await getCurrentUser()
     return (
-        <div className="w-[1280px] mx-auto px-8 flex justify-end">
+        <div className="w-[1280px]  mx-auto px-8 flex justify-end">
             <div className="flex gap-8 text-white">
                 <Link href={`/`} className="text-white">Home</Link>
                 <Link href={`/products`} className="text-white">Products</Link>

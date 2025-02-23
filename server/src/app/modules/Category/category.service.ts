@@ -1,4 +1,3 @@
-import { Category } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { Request } from "express";
 import ApiError from "../../errors/ApiError";
@@ -59,7 +58,6 @@ const editCategory = async (categoryId: string, req: Request) => {
 };
 
 const deleteCategory = async (categoryId: string) => {
-  console.log(categoryId)
   const result = await prisma.category.delete({
     where: {
       id: categoryId,

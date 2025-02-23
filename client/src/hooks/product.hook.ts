@@ -6,11 +6,9 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-  UseQueryOptions,
 } from "@tanstack/react-query";
 
 export const useGetProducts = ({
-  brand,
   category,
   searchTerm,
   minPrice,
@@ -21,7 +19,6 @@ export const useGetProducts = ({
 
   const queryKey = [
     "PRODUCTS",
-    brand,
     category,
     searchTerm,
     minPrice,
@@ -33,7 +30,6 @@ export const useGetProducts = ({
     queryKey,
     queryFn: async () => {
       const data = await getProducts({
-        brand,
         category,
         searchTerm,
         minPrice,

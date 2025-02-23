@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, ReactNode } from "react";
-import { MoreVertical, ChevronLeft, ChevronRight } from "lucide-react";
+import { MoreVertical, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 
 interface Column<T> {
     header: string;
@@ -50,8 +50,8 @@ const ReusableTable = <T extends { id: number }>({
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(data.length / itemsPerPage);
+    const currentItems = data?.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(data?.length / itemsPerPage);
 
     return (
         <div className="p-6 max-w-6xl mx-auto bg-white rounded-lg shadow-sm">
@@ -60,14 +60,15 @@ const ReusableTable = <T extends { id: number }>({
                 {onCreate && (
                     <button
                         onClick={onCreate}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 text-sm rounded flex items-center"
+                        className="bg-red-500 hover:bg-red-600 transition duration-200 text-white px-4 py-2 text-sm rounded flex gap-1 items-center"
                     >
-                        Create new
+                        <span>Create new</span>
+                        <Plus size={16} />
                     </button>
                 )}
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto font-sm">
                 <table className="min-w-full bg-white">
                     <thead>
                         <tr className="bg-[#EAEBED] hover:bg-[#F0F0F1] transition duration-150 border-b text-sm">
@@ -87,13 +88,13 @@ const ReusableTable = <T extends { id: number }>({
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((item) => (
+                        {currentItems?.map((item) => (
                             <tr
                                 key={item.id}
                                 className="border-b hover:bg-gray-50 text-sm"
                             >
                                 {columns.map((col) => (
-                                    <td key={String(col.key)} className="py-3 px-2">
+                                    <td key={String(col.key)} className="py-2 px-2">
                                         {col.render ? (
                                             col.render(item)
                                         ) : typeof item[col.key] === "string" &&
